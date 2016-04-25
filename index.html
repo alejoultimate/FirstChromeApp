@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FirstChromeApp</title>
+  <link rel="stylesheet" href="styles.css">
+  <!--<script src="puerto.js"></script>-->
+
+</head>
+
+<body>
+  <h1 id="greeting"></h1>
+
+  <!--<script src="main.js"></script>-->
+
+  <select id=listaDePuertos>
+    <!--<script src="listarPuertosSeriales.js"></script>-->
+  </select>
+  
+  <button onclick="conectarPuerto()">Connect</button>
+  
+  <p id="demo"></p>
+  
+  
+  
+  <script>
+    
+    
+    function conectarPuerto() {
+      //var puerto = new Puerto( "COM1" );
+      //puerto.abrirPuerto();
+      document.getElementById("demo").innerHTML = "Hello World";
+    }
+
+  </script>
+  
+</body>
+</html>
