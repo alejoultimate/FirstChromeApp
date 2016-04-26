@@ -11,7 +11,9 @@ function myFunction() {
 }
 
 function conectarPuerto() {
-    var puerto = new Puerto( "COM1" );
+  
+    var rutaPuertoActual = document.getElementById("listaDePuertos").value
+    var puerto = new Puerto( rutaPuertoActual );
     puerto.abrirPuerto();
     
     document.getElementById('demo').innerHTML = "Puerto conectado";
