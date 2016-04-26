@@ -11,13 +11,10 @@ function myFunction() {
 }
 
 function conectarPuerto() {
-  
-    var rutaPuertoActual = document.getElementById("listaDePuertos").value
+    var rutaPuertoActual = document.getElementById("listaDePuertos").value;
     var puerto = new Puerto( rutaPuertoActual );
     puerto.abrirPuerto();
-    
-    document.getElementById('demo').innerHTML = "Puerto conectado";
-      
+    document.getElementById('textConexion').innerHTML = "Puerto conectado";
 }
 
 /* Permite cargar múltiples funciones de JavaScript en el evento onload */
