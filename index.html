@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FirstChromeApp</title>
+  <meta charset="utf-8" />
   <link rel="stylesheet" href="styles.css">
-  <script src="puertoserial.js"></script>
+  <title>FirstChromeApp</title>
+
+  <!--<script src="puertoserial.js"></script>-->
 
 </head>
 
 <body>
   
-  <form name='formPuertos'>
-    <h1 id="greeting"></h1>
-    <script src="main.js"></script>
-
-    <select id=listaDePuertos>
-      <script src="listarPuertosSeriales.js"></script>
-    </select>
-  
-    <input type='button' id='conectarButton' value='Conectar'>
-    <p id="txtEstadoConexion"></p>
-
-    <input type='button' id='escucharButton' value='Escuchar'>
-    <p id="txtEscuchando"></p>
-
+  <h1 id="greeting"></h1>
     
-  </form>
- 
+
+  <div id="status">Hover here to connect</div>  
+
+  <div class="commands">
+        <select class="serial_devices">
+        </select>
+        <button class="refresh">refresh</button><br/>
+        <button class="open">open</button>
+        <button class="close">close</button>
+        <div class="log"></div>
+  </div>
+
+  
+  <script src="serial.js"></script>
+  <script src="main.js"></script>
   
 </body>
 </html>
