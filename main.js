@@ -5,6 +5,7 @@
   var statusLine = document.querySelector("#status");
   var serialDevices = document.querySelector(".serial_devices");
   var connection = null;
+  var stringReceived = '';
 
   var init = function() {
     if (!serial_lib)
@@ -105,6 +106,11 @@
       log("<span style='color: green;'>" + msg + "</span>");
   };
 
+  var logError = function(msg) {
+    statusLine.className = "error";
+    statusLine.textContent = msg;
+    log("<span style='color: red;'>" + msg + "</span>");
+  };
 
   var onOpen = function(newConnection) {
     if (newConnection === null) {
@@ -121,10 +127,10 @@
   };
 
  var onReceive = function(data) {
-    if (data.indexOf("log:") >= 0) {
+  /*  if (data.indexOf("log:") >= 0) {
       return;
     }
-  /*  var m = /([^:]+):([-]?\d+)(?:,([-]?\d+))?/.exec(data);
+    var m = /([^:]+):([-]?\d+)(?:,([-]?\d+))?/.exec(data);
     if (m && m.length > 0) {
       switch (m[1]) {
         case "b1":
@@ -158,9 +164,35 @@
           break;
       }
     }*/
+    
+/*    if (data.charAt(data.length-1) === '\n') {
+      stringReceived += data.substring(0, data.length-1);
+      log(stringReceived);
+      sendSerial("TX: recibi esto: " + stringReceived); 
+      onLineReceived(stringReceived);
+      stringReceived = '';
+    } else {
+      stringReceived += data;
+    }*/
+    
+    stringReceived += data;
     log(data);
+    
   };
   
+  var sendSerial = function(message) {
+    if (connection === null) {
+      return;
+    }
+    if (!message) {
+      logError("Nothing to send!");
+      return;
+    }
+    if (message.charAt(message.length - 1) !== '\n') {
+      message += "\n";
+    }
+    connection.send(message);
+  };
   
   var onError = function(errorInfo) {
     if (errorInfo.error !== 'timeout') {
