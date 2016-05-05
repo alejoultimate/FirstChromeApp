@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dist/switchery.min.css" />
+  <script src="dist/switchery.min.js"></script>
   <title>FirstChromeApp</title>
 </head>
 
@@ -13,18 +15,21 @@
 
   <div id="status">Hover here to connect</div>  
 
-  <div class="commands">
+  <div class="commands" id="misOperaciones">
         <select class="serial_devices">
         </select>
         <button class="refresh">refresh</button><br/>
-        <button class="open">open</button>
-        <button class="close">close</button>
+        <!--<button class="close">close</button>-->
         <div class="log"></div>
+        <table id="myTable">
+        </table>
   </div>
 
-  
+
   <script src="serial.js"></script>
   <script src="main.js"></script>
+  
+  
   
 </body>
 </html>

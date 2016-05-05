@@ -1,26 +1,27 @@
 (function() {
-  var btnOpen = document.querySelector(".open");
-  var btnClose = document.querySelector(".close");
+  //var btnClose = document.querySelector(".close");
   var logArea = document.querySelector(".log");
   var statusLine = document.querySelector("#status");
   var serialDevices = document.querySelector(".serial_devices");
   var connection = null;
   var stringReceived = '';
-
+  var puertos;
+  
   var init = function() {
     if (!serial_lib)
       throw "You must include serial.js before";
 
     //enableOpenButton(true);
-    btnOpen.addEventListener("click", openDevice);
-    btnClose.addEventListener("click", closeDevice);
+    initFormPuertoSerial();
+    //btnClose.addEventListener("click", closeDevice);
     //window.addEventListener("hashchange", changeTab);
     document.querySelector(".refresh").addEventListener("click", refreshPorts);
     //initADKListeners();
     refreshPorts();
   };
   
-   var openDevice = function() {
+  
+  var openDevice = function() {
     var selection = serialDevices.selectedOptions[0];
     if (!selection) {
       logError("No port selected.");
@@ -40,14 +41,34 @@
   };
   
   
+  var opencloseDevice = function() {
+    if (connection !== null) {
+       connection.close();
+    } else {
+      var selection = serialDevices.selectedOptions[0];
+      if (!selection) {
+        logError("No port selected.");
+        return;
+      }
+      var path = selection.value;
+      statusLine.classList.add("on");
+      statusLine.textContent = "Connecting";
+      //enableOpenButton(false);
+      serial_lib.openDevice(path, onOpen);
+    }
+  };
+
+  
   var refreshPorts = function() {
     while (serialDevices.options.length > 0)
       serialDevices.options.remove(0);
 
-    serial_lib.getDevices(function(items) {
-      logSuccess("got " + items.length + " ports");
-      for (var i = 0; i < items.length; ++i) {
-        var path = items[i].path;
+    serial_lib.getDevices(function(puertos) {
+      var contador=0;
+      logSuccess("got " + puertos.length + " ports");
+      for (var i = 0; i < puertos.length; ++i) {
+        contador++;
+        var path = puertos[i].path;
         serialDevices.options.add(new Option(path, path));
         if (i === 1 || /usb/i.test(path) && /tty/i.test(path)) {
           serialDevices.selectionIndex = i;
@@ -55,9 +76,49 @@
         }
       }
     });
+    
   };
 
 
+  var initFormPuertoSerial = function() {
+    crearBotonesPuertoSerial();
+  };
+  
+  var crearBotonesPuertoSerial = function() {
+      
+      serial_lib.getDevices(function(puertos) {
+          var contador=0;
+          for (var i = 0; i < puertos.length; ++i) {
+            contador++;
+            
+            var path = puertos[i].path;
+            var btn = document.createElement("button");
+            var t = document.createTextNode(path);
+            var att = document.createAttribute("class");
+            att.value = "button";
+            btn.setAttributeNode(att);
+            btn.appendChild(t);
+            document.body.appendChild(btn);
+            document.getElementById("misOperaciones").appendChild(btn);
+            //btn.addEventListener("click", openDevice);
+            btn.addEventListener("click", opencloseDevice);
+            
+
+            var inp = document.createElement("INPUT");
+            inp.setAttribute("type", "checkbox");
+            inp.setAttribute("class", "checkbox");
+            document.body.appendChild(inp);
+            document.getElementById("misOperaciones").appendChild(inp);
+            var initialize = new Switchery(inp);
+            inp.addEventListener("change", opencloseDevice);
+
+          }
+      });
+  };
+  
+  
+
+/*
   var initADKListeners = function() {
       addListenerToElements("change", ".servos input[type='range']", function(e, index) {
           sendSerial("s" + index + toHexString(parseInt(this.value)));
@@ -81,7 +142,7 @@
       });
       setInterval(function() { sendSerial("data"); }, SENSOR_REFRESH_INTERVAL);
   };  
-
+*/
 
 
   var addListenerToElements = function(eventType, selector, listener) {
@@ -236,6 +297,7 @@
   
   
   addLoadEvent(bienvenida);
+  //addLoadEvent(crearBoton);
 
   
   init();
