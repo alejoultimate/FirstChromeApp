@@ -151,7 +151,9 @@
   function openPrueba(e) {
     if (e.target !== e.currentTarget) {
         var clickedItem = e.target.id;
-        log("Hello " + clickedItem);
+        //log("Hello " + clickedItem);
+        
+        log(document.getElementById(clickedItem).checked);
     }
     e.stopPropagation();
   }
