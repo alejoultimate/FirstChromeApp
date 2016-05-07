@@ -64,10 +64,8 @@
       serialDevices.options.remove(0);
 
     serial_lib.getDevices(function(puertos) {
-      var contador=0;
       logSuccess("got " + puertos.length + " ports");
       for (var i = 0; i < puertos.length; ++i) {
-        contador++;
         var path = puertos[i].path;
         serialDevices.options.add(new Option(path, path));
         if (i === 1 || /usb/i.test(path) && /tty/i.test(path)) {
@@ -87,34 +85,78 @@
   var crearBotonesPuertoSerial = function() {
       
       serial_lib.getDevices(function(puertos) {
-          var contador=0;
           for (var i = 0; i < puertos.length; ++i) {
-            contador++;
             
+            
+            // Tabla de puertos
+            var table = document.getElementById("tblPuertos");
+            var row = table.insertRow(0);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+
+            
+            // Botones puerto serial
             var path = puertos[i].path;
             var btn = document.createElement("button");
             var t = document.createTextNode(path);
-            var att = document.createAttribute("class");
-            att.value = "button";
-            btn.setAttributeNode(att);
             btn.appendChild(t);
+            btn.setAttribute("class", "button");
             document.body.appendChild(btn);
             document.getElementById("misOperaciones").appendChild(btn);
-            //btn.addEventListener("click", openDevice);
-            btn.addEventListener("click", opencloseDevice);
             
-
+            // Adicionar el botón a la tabla de puertos
+            cell1.appendChild( btn );
+            
+            
+            // Input tipo checkbox para la conexión del puerto serial
             var inp = document.createElement("INPUT");
             inp.setAttribute("type", "checkbox");
             inp.setAttribute("class", "checkbox");
-            document.body.appendChild(inp);
-            document.getElementById("misOperaciones").appendChild(inp);
-            var initialize = new Switchery(inp);
-            inp.addEventListener("change", opencloseDevice);
+            inp.setAttribute("name", "chkPuertoSerial" + i);
+            inp.setAttribute("id", "chkPuertoSerial" + i);
+            //document.body.appendChild(inp);
+            //document.getElementById("misOperaciones").appendChild(inp);
+            document.getElementById("puertos").appendChild(inp);
 
+            // Adicionar el input tipo checkbox a la tabla de puertos
+            cell2.appendChild( inp );
+            
+            // Crear presentación del input tipo checkbox
+            var initialize = new Switchery(inp);
+
+            // Definición de los listener
+            //btn.addEventListener("click", openDevice);
+            //btn.addEventListener("change", opencloseDevice);
+          
           }
+
       });
+      
+      var theParent = document.querySelector("#puertos");
+      theParent.addEventListener("change", openPrueba, false);
+      
+
+      /*
+      log("ANTES DEL listener");
+      addListenerToElements("click", ".puertos input[type='checkbox']", function(e, index) {
+        //sendSerial("s" + index + toHexString(parseInt(this.value)));
+        log("Se ejecutó el listener");
+      });
+      */
+      
+      
   };
+  
+  
+  function openPrueba(e) {
+    if (e.target !== e.currentTarget) {
+        var clickedItem = e.target.id;
+        log("Hello " + clickedItem);
+    }
+    e.stopPropagation();
+  }
+
+  
   
   
 
