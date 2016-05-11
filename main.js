@@ -21,16 +21,9 @@
   };
   
   
-  var openDevice = function() {
-    var selection = serialDevices.selectedOptions[0];
-    if (!selection) {
-      logError("No port selected.");
-      return;
-    }
-    var path = selection.value;
+  var openDevice = function(path) {
     statusLine.classList.add("on");
     statusLine.textContent = "Connecting";
-    //enableOpenButton(false);
     serial_lib.openDevice(path, onOpen);
   };
   
@@ -40,24 +33,6 @@
    }
   };
   
-  
-  var opencloseDevice = function() {
-    if (connection !== null) {
-       connection.close();
-    } else {
-      var selection = serialDevices.selectedOptions[0];
-      if (!selection) {
-        logError("No port selected.");
-        return;
-      }
-      var path = selection.value;
-      statusLine.classList.add("on");
-      statusLine.textContent = "Connecting";
-      //enableOpenButton(false);
-      serial_lib.openDevice(path, onOpen);
-    }
-  };
-
   
   var refreshPorts = function() {
     while (serialDevices.options.length > 0)
@@ -124,37 +99,31 @@
             // Crear presentación del input tipo checkbox
             var initialize = new Switchery(inp);
 
-            // Definición de los listener
-            //btn.addEventListener("click", openDevice);
-            //btn.addEventListener("change", opencloseDevice);
-          
           }
 
       });
       
-      var theParent = document.querySelector("#puertos");
-      theParent.addEventListener("change", openPrueba, false);
-      
-
-      /*
-      log("ANTES DEL listener");
-      addListenerToElements("click", ".puertos input[type='checkbox']", function(e, index) {
-        //sendSerial("s" + index + toHexString(parseInt(this.value)));
-        log("Se ejecutó el listener");
-      });
-      */
-      
+      var parentTblPuertos = document.querySelector("#tblPuertos");
+      parentTblPuertos.addEventListener("change", opencloseDevice, false);
       
   };
   
   
-  function openPrueba(e) {
+  function opencloseDevice(e) {
     if (e.target !== e.currentTarget) {
         var clickedItem = e.target.id;
-        //log("Hello " + clickedItem);
+        var indexFilaPuertos = document.getElementById(clickedItem).parentElement.parentElement.rowIndex;
+        var puertoChequeado = document.getElementById(clickedItem).checked;
+        if ( puertoChequeado ) {
+          var path = document.getElementsByTagName('button')[indexFilaPuertos].textContent;
+          openDevice(path);
+        } else {
+          closeDevice();
+        }
         
-        log(document.getElementById(clickedItem).checked);
     }
+    
+
     e.stopPropagation();
   }
 
