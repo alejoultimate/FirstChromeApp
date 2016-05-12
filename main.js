@@ -4,9 +4,9 @@
   var statusLine = document.querySelector("#status");
   var serialDevices = document.querySelector(".serial_devices");
   var connection = null;
+  var arrayConexionPuertos = [];
   var stringReceived = '';
-  var puertos;
-  
+
   var init = function() {
     if (!serial_lib)
       throw "You must include serial.js before";
@@ -27,9 +27,9 @@
     serial_lib.openDevice(path, onOpen);
   };
   
-  var closeDevice = function() {
-   if (connection !== null) {
-     connection.close();
+  var closeDevice = function(index) {
+   if (arrayConexionPuertos[index] !== null) {
+     arrayConexionPuertos[index].close();
    }
   };
   
@@ -70,7 +70,7 @@
             var cell2 = row.insertCell(1);
 
             
-            // Botones puerto serial
+            // Crear botones puerto serial
             var path = puertos[i].path;
             var btn = document.createElement("button");
             var t = document.createTextNode(path);
@@ -83,14 +83,12 @@
             cell1.appendChild( btn );
             
             
-            // Input tipo checkbox para la conexión del puerto serial
+            // Crear input tipo checkbox para la conexión del puerto serial
             var inp = document.createElement("INPUT");
             inp.setAttribute("type", "checkbox");
             inp.setAttribute("class", "checkbox");
             inp.setAttribute("name", "chkPuertoSerial" + i);
             inp.setAttribute("id", "chkPuertoSerial" + i);
-            //document.body.appendChild(inp);
-            //document.getElementById("misOperaciones").appendChild(inp);
             document.getElementById("puertos").appendChild(inp);
 
             // Adicionar el input tipo checkbox a la tabla de puertos
@@ -118,12 +116,9 @@
           var path = document.getElementsByTagName('button')[indexFilaPuertos].textContent;
           openDevice(path);
         } else {
-          closeDevice();
+          closeDevice(indexFilaPuertos);
         }
-        
     }
-    
-
     e.stopPropagation();
   }
 
@@ -195,6 +190,7 @@
     connection.onReceive.addListener(onReceive);
     connection.onError.addListener(onError);
     connection.onClose.addListener(onClose);
+    arrayConexionPuertos[arrayConexionPuertos.length] = connection;  
     logSuccess("Device opened.");
 //    enableOpenButton(false);
     statusLine.textContent = "Connected";
