@@ -24,7 +24,7 @@ var serial_lib = (function() {
   };
 
   // Enapsulates an active serial device connection.
-  var DeviceConnection = function(connectionId) {
+  var DeviceConnection = function(index, connectionId) {
     var onReceive = new chrome.Event();
     var onError = new chrome.Event();
     var onClose = new chrome.Event();
@@ -34,18 +34,18 @@ var serial_lib = (function() {
     var close = function() {
       chrome.serial.disconnect(connectionId, function(success) {
         if (success) {
-          onClose.dispatch();
+          onClose.dispatch(index);
         }
       });
     };
     chrome.serial.onReceive.addListener(function(receiveInfo) {
       if (receiveInfo.connectionId === connectionId) {
-        onReceive.dispatch(ab2str(receiveInfo.data));
+        onReceive.dispatch(index, receiveInfo.connectionId, ab2str(receiveInfo.data));
       }
     });
     chrome.serial.onReceiveError.addListener(function(errorInfo) {
       if (errorInfo.connectionId === connectionId) {
-        onError.dispatch(errorInfo.error);
+        onError.dispatch(index, errorInfo.error);
       }
     });
     return {
@@ -61,13 +61,15 @@ var serial_lib = (function() {
     chrome.serial.getDevices(callback);
   };
 
-  var openDevice = function(path, callback) {
+  var openDevice = function(index, path, callback) {
     chrome.serial.connect(path, { bitrate: 57600 }, function(connectionInfo) {
       var device = null;
+      var connectionId = null;
       if (connectionInfo) {
-        device = new DeviceConnection(connectionInfo.connectionId);
+        device = new DeviceConnection(index, connectionInfo.connectionId);
+        connectionId = connectionInfo.connectionId;
       }
-      callback(device);
+      callback(device, connectionId, index);
     });
   };
   
@@ -90,6 +92,6 @@ var serial_lib = (function() {
 
   return {
     "getDevices": getDevices,
-    "openDevice": openDevice,
+    "openDevice": openDevice
   };
 }());

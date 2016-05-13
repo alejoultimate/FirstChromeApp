@@ -3,7 +3,6 @@
   var logArea = document.querySelector(".log");
   var statusLine = document.querySelector("#status");
   var serialDevices = document.querySelector(".serial_devices");
-  var connection = null;
   var arrayConexionPuertos = [];
   var stringReceived = '';
 
@@ -21,10 +20,10 @@
   };
   
   
-  var openDevice = function(path) {
+  var openDevice = function(index, path) {
     statusLine.classList.add("on");
     statusLine.textContent = "Connecting";
-    serial_lib.openDevice(path, onOpen);
+    serial_lib.openDevice(index, path, onOpen);
   };
   
   var closeDevice = function(index) {
@@ -58,19 +57,14 @@
   };
   
   var crearBotonesPuertoSerial = function() {
-      
       serial_lib.getDevices(function(puertos) {
           for (var i = 0; i < puertos.length; ++i) {
-            
-            
-            // Tabla de puertos
+            // Crear tabla de puertos
             var table = document.getElementById("tblPuertos");
             var row = table.insertRow(0);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
-
-            
-            // Crear botones puerto serial
+            // Crear boton puerto serial
             var path = puertos[i].path;
             var btn = document.createElement("button");
             var t = document.createTextNode(path);
@@ -78,11 +72,8 @@
             btn.setAttribute("class", "button");
             document.body.appendChild(btn);
             document.getElementById("misOperaciones").appendChild(btn);
-            
             // Adicionar el botón a la tabla de puertos
             cell1.appendChild( btn );
-            
-            
             // Crear input tipo checkbox para la conexión del puerto serial
             var inp = document.createElement("INPUT");
             inp.setAttribute("type", "checkbox");
@@ -90,33 +81,27 @@
             inp.setAttribute("name", "chkPuertoSerial" + i);
             inp.setAttribute("id", "chkPuertoSerial" + i);
             document.getElementById("puertos").appendChild(inp);
-
             // Adicionar el input tipo checkbox a la tabla de puertos
             cell2.appendChild( inp );
-            
             // Crear presentación del input tipo checkbox
             var initialize = new Switchery(inp);
-
           }
-
       });
-      
       var parentTblPuertos = document.querySelector("#tblPuertos");
       parentTblPuertos.addEventListener("change", opencloseDevice, false);
-      
   };
   
   
   function opencloseDevice(e) {
     if (e.target !== e.currentTarget) {
         var clickedItem = e.target.id;
-        var indexFilaPuertos = document.getElementById(clickedItem).parentElement.parentElement.rowIndex;
+        var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex;
         var puertoChequeado = document.getElementById(clickedItem).checked;
         if ( puertoChequeado ) {
-          var path = document.getElementsByTagName('button')[indexFilaPuertos].textContent;
-          openDevice(path);
+          var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
+          openDevice(indexPuertoActual, path);
         } else {
-          closeDevice(indexFilaPuertos);
+          closeDevice(indexPuertoActual);
         }
     }
     e.stopPropagation();
@@ -181,22 +166,22 @@
     log("<span style='color: red;'>" + msg + "</span>");
   };
 
-  var onOpen = function(newConnection) {
+  var onOpen = function(newConnection, connectionId, index) {
     if (newConnection === null) {
       logError("Failed to open device.");
       return;
     }
-    connection = newConnection;
-    connection.onReceive.addListener(onReceive);
-    connection.onError.addListener(onError);
-    connection.onClose.addListener(onClose);
-    arrayConexionPuertos[arrayConexionPuertos.length] = connection;  
+    arrayConexionPuertos[index] = newConnection;
+    arrayConexionPuertos[index].onReceive.addListener(onReceive);
+    arrayConexionPuertos[index].onError.addListener(onError);
+    arrayConexionPuertos[index].onClose.addListener(onClose);
+    log("Id. conexion ABIERTO " + connectionId);
     logSuccess("Device opened.");
 //    enableOpenButton(false);
     statusLine.textContent = "Connected";
   };
 
- var onReceive = function(data) {
+ var onReceive = function(index, connectionId, data) {
   /*  if (data.indexOf("log:") >= 0) {
       return;
     }
@@ -235,23 +220,15 @@
       }
     }*/
     
-/*    if (data.charAt(data.length-1) === '\n') {
-      stringReceived += data.substring(0, data.length-1);
-      log(stringReceived);
-      sendSerial("TX: recibi esto: " + stringReceived); 
-      onLineReceived(stringReceived);
-      stringReceived = '';
-    } else {
-      stringReceived += data;
-    }*/
-    
+    log("Id. conexion RECIBIENDO " + connectionId);
     stringReceived += data;
     log(data);
-    
+    sendSerial(index, "Respuesta a : " + data);
+
   };
   
-  var sendSerial = function(message) {
-    if (connection === null) {
+  var sendSerial = function(index, message) {
+    if (arrayConexionPuertos[index] === null) {
       return;
     }
     if (!message) {
@@ -261,19 +238,18 @@
     if (message.charAt(message.length - 1) !== '\n') {
       message += "\n";
     }
-    connection.send(message);
+    arrayConexionPuertos[index].send(message);
   };
   
-  var onError = function(errorInfo) {
+  var onError = function(index, errorInfo) {
     if (errorInfo.error !== 'timeout') {
       logError("Fatal error encounted. Dropping connection.");
-      closeDevice();
+      closeDevice(index);
     }
   };
   
-  var onClose = function(result) {
-    connection = null;
-    //enableOpenButton(true);
+  var onClose = function(index) {
+    arrayConexionPuertos[index] = null;
     statusLine.textContent = "Hover here to connect";
     statusLine.className = "";
   };
@@ -306,7 +282,6 @@
   
   
   addLoadEvent(bienvenida);
-  //addLoadEvent(crearBoton);
 
   
   init();
