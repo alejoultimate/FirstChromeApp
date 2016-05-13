@@ -9,13 +9,10 @@
   var init = function() {
     if (!serial_lib)
       throw "You must include serial.js before";
-
-    //enableOpenButton(true);
     initFormPuertoSerial();
     //btnClose.addEventListener("click", closeDevice);
     //window.addEventListener("hashchange", changeTab);
     document.querySelector(".refresh").addEventListener("click", refreshPorts);
-    //initADKListeners();
     refreshPorts();
   };
   
@@ -108,36 +105,6 @@
   }
 
   
-  
-  
-
-/*
-  var initADKListeners = function() {
-      addListenerToElements("change", ".servos input[type='range']", function(e, index) {
-          sendSerial("s" + index + toHexString(parseInt(this.value)));
-      });
-      addListenerToElements("change", ".leds input[type='range']", function(e, index) {
-          this.nextSibling.textContent = this.value;
-          sendSerial("c" + index + toHexString(parseInt(this.value)));
-      });
-      addListenerToElements("click", ".relays button", function(e, index) {
-        if (this.classList.contains("on")) {
-          // turn it off
-          this.classList.remove("on");
-          this.textContent = "Off";
-          sendSerial("t" + index + "0");
-        } else {
-          // turn it on
-          this.classList.add("on");
-          this.textContent = "On";
-          sendSerial("t" + index + "1");
-        }
-      });
-      setInterval(function() { sendSerial("data"); }, SENSOR_REFRESH_INTERVAL);
-  };  
-*/
-
-
   var addListenerToElements = function(eventType, selector, listener) {
       var addListener = function(type, element, index) {
         element.addEventListener(type, function(e) {
