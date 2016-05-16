@@ -217,9 +217,24 @@
   
   var onClose = function(index) {
     arrayConexionPuertos[index] = null;
+    limpiarArraySinValoresNulos(arrayConexionPuertos);
+    console.log(arrayConexionPuertos);
     statusLine.textContent = "Hover here to connect";
     statusLine.className = "";
   };
+  
+  function limpiarArraySinValoresNulos(array) {
+    var eliminar = true;
+    for (var i = 0; i < array.length; ++i) {
+    if ( array[i] !== null && array[i] !== undefined) {
+        eliminar = false;
+      }
+    }
+    if (eliminar) {
+          while (array.length > 0)
+            array.splice(0, 1);  
+    }
+  }
 
 
 /////////////////////////////////////////////////////////////////////////
