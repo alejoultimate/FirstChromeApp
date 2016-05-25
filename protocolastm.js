@@ -96,14 +96,14 @@ ProtocolASTM.prototype.readInputData = function (data) {
 };
 
 
-ProtocolASTM.prototype.createFields = function (value) {
+ProtocolASTM.prototype.createFields = function (data) {
   var fields = [];
   var character = "";
   var sumOfcharacters = "";
   var position = 1;
   var i;
-  for (i = 0; i <= value.length; i++) {
-    character = value.substr(i, 1);
+  for (i = 0; i <= data.length; i++) {
+    character = data.substr(i, 1);
     if ( character === "|" )
       character = "";
     sumOfcharacters += character;
