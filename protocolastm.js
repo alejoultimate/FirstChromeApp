@@ -209,7 +209,7 @@ ProtocolASTM.prototype.readInputData = function (data) {
   var currentPositionOrder = 0;
 
   // Clean special character
-  var newData = protocol.cleanSpecialCharacters(data);
+  var newData = this.cleanSpecialCharacters(data);
   // Convert the data to fields
   fields = this.createFields(newData);
   // Create Header
@@ -251,6 +251,7 @@ ProtocolASTM.prototype.createFields = function (data) {
 };
 
 
+/*
 var protocol = new ProtocolASTM();
 
 protocol.readInputData("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825");
@@ -309,5 +310,4 @@ protocol.readInputData("L|1|N");
 
 
 console.log(protocol);
-
-
+*/

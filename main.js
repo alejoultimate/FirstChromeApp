@@ -149,48 +149,17 @@
   };
 
  var onReceive = function(index, connectionId, data) {
-  /*  if (data.indexOf("log:") >= 0) {
-      return;
-    }
-    var m = /([^:]+):([-]?\d+)(?:,([-]?\d+))?/.exec(data);
-    if (m && m.length > 0) {
-      switch (m[1]) {
-        case "b1":
-          document.querySelector("#b1").className = m[2] === "0" ? "" : "on";
-          break;
-        case "b2":
-          document.querySelector("#b2").className = m[2] === "0" ? "" : "on";
-          break;
-        case "b3":
-          document.querySelector("#b3").className = m[2] === "0" ? "" : "on";
-          break;
-        case "c":
-          document.querySelector("#bc").className = m[2] === "0" ? "" : "on";
-          log(data);
-          break;
-        case "js":
-          document.querySelector("#joy .pointer").className = m[2] === "0" ? "pointer" : "pointer on";
-          break;
-        case "t":
-          document.querySelector("#temp").textContent = convertTemperature(m[2]);
-          break;
-        case "l":
-          document.querySelector("#light").textContent = Math.round((1000 * parseInt(m[2]) / 1024)) / 10;
-          document.querySelector("#lightv1").textContent = m[2];
-          break;
-        case "jxy":
-          var el = document.querySelector("#joy .pointer");
-          el.style.left = ((128 + parseInt(m[2]) * 0.6) / 256.0 * el.parentElement.offsetWidth) + "px";
-          el.style.top = ((128 + parseInt(m[3]) * 0.9) / 256.0 * el.parentElement.offsetHeight) + "px";
-          el.textContent = m[2] + "," + m[3];
-          break;
-      }
-    }*/
-    
+
     log("Id. conexion RECIBIENDO " + connectionId);
     stringReceived += data;
     log(data);
+    
+    var protocol = new ProtocolASTM();
+    protocol.readInputData(data);
+    console.log(protocol);
+    
     sendSerial(index, "Respuesta a : " + data);
+    
 
   };
   
