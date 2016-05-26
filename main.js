@@ -154,9 +154,8 @@
     stringReceived += data;
     log(data);
     
-    var protocol = new ProtocolASTM();
-    protocol.readInputData(data);
-    console.log(protocol);
+    var driverAnalyzer = new DriverForCA1500();
+    driverAnalyzer.readInputData(data);
     
     sendSerial(index, "Respuesta a : " + data);
     
