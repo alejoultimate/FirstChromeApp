@@ -5,10 +5,12 @@
   var serialDevices = document.querySelector(".serial_devices");
   var arrayConexionPuertos = [];
   var stringReceived = '';
-
+  var configurationOfAnalyzer = new ConfigurationOfAnalyzer();
+  
   var init = function() {
     if (!serial_lib)
       throw "You must include serial.js before";
+    configurationOfAnalyzer.loadConfiguration(onLoadAnalyzerJSON);
     initFormPuertoSerial();
     //btnClose.addEventListener("click", closeDevice);
     //window.addEventListener("hashchange", changeTab);
@@ -95,6 +97,10 @@
         var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex;
         var puertoChequeado = document.getElementById(clickedItem).checked;
         if ( puertoChequeado ) {
+    
+          configurationOfAnalyzer.items[indexPuertoActual].index = indexPuertoActual;
+          console.log(configurationOfAnalyzer.items[indexPuertoActual]);
+
           var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
           openDevice(indexPuertoActual, path);
         } else {
@@ -154,8 +160,13 @@
     stringReceived += data;
     log(data);
     
-    var driverAnalyzer = new DriverForCA1500();
+    
+    var classNameDriverAnalyzer = "DriverForCA1500";
+    var driverAnalyzer = new window[classNameDriverAnalyzer]();
     driverAnalyzer.readInputData(data);
+    
+    /*var driverAnalyzer = new DriverForCA1500();
+    driverAnalyzer.readInputData(data);*/
     
     sendSerial(index, "Respuesta a : " + data);
     
@@ -204,6 +215,9 @@
     }
   }
 
+  var onLoadAnalyzerJSON = function(response) {
+    configurationOfAnalyzer.items = JSON.parse(response);
+  };
 
 /////////////////////////////////////////////////////////////////////////
 /// mi código de prueba
