@@ -4,8 +4,8 @@
   var statusLine = document.querySelector("#status");
   var serialDevices = document.querySelector(".serial_devices");
   var arrayConexionPuertos = [];
-  var stringReceived = '';
   var configurationOfAnalyzer = new ConfigurationOfAnalyzer();
+  var arrayDriverAnalyzer = [];
   
   var init = function() {
     if (!serial_lib)
@@ -19,10 +19,10 @@
   };
   
   
-  var openDevice = function(index, path) {
+  var openDevice = function(configuration) {
     statusLine.classList.add("on");
     statusLine.textContent = "Connecting";
-    serial_lib.openDevice(index, path, onOpen);
+    serial_lib.openDevice(configuration, onOpen);
   };
   
   var closeDevice = function(index) {
@@ -92,22 +92,28 @@
   
   
   function opencloseDevice(e) {
-    if (e.target !== e.currentTarget) {
-        var clickedItem = e.target.id;
-        var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex;
-        var puertoChequeado = document.getElementById(clickedItem).checked;
-        if ( puertoChequeado ) {
-    
-          configurationOfAnalyzer.items[indexPuertoActual].index = indexPuertoActual;
-          console.log(configurationOfAnalyzer.items[indexPuertoActual]);
-
-          var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
-          openDevice(indexPuertoActual, path);
-        } else {
-          closeDevice(indexPuertoActual);
-        }
+    try {
+      if (e.target !== e.currentTarget) {
+          var clickedItem = e.target.id;
+          var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex;
+          var puertoChequeado = document.getElementById(clickedItem).checked;
+          if ( puertoChequeado ) {
+            var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
+            configurationOfAnalyzer.items[indexPuertoActual].index = indexPuertoActual;
+            configurationOfAnalyzer.items[indexPuertoActual].pathSerialPort = path;
+            openDevice(configurationOfAnalyzer.items[indexPuertoActual]);
+            var classNameDriverAnalyzer = configurationOfAnalyzer.items[indexPuertoActual].nameDriverAnalyzer;
+            var driverAnalyzer = new window[classNameDriverAnalyzer]();
+            arrayDriverAnalyzer.push(driverAnalyzer);
+          } else {
+            closeDevice(indexPuertoActual);
+          }
+      }
+      e.stopPropagation();
     }
-    e.stopPropagation();
+    catch(err) {
+      logError("Ocurrió el siguiente error: " + err.message);
+    }
   }
 
   
@@ -155,22 +161,10 @@
   };
 
  var onReceive = function(index, connectionId, data) {
-
-    log("Id. conexion RECIBIENDO " + connectionId);
-    stringReceived += data;
-    log(data);
-    
-    
-    var classNameDriverAnalyzer = "DriverForCA1500";
-    var driverAnalyzer = new window[classNameDriverAnalyzer]();
-    driverAnalyzer.readInputData(data);
-    
-    /*var driverAnalyzer = new DriverForCA1500();
-    driverAnalyzer.readInputData(data);*/
-    
-    sendSerial(index, "Respuesta a : " + data);
-    
-
+    var dataOutput = "";
+    dataOutput = arrayDriverAnalyzer[index].readInputData(data, configurationOfAnalyzer.items[index]);
+    if (dataOutput.length > 0)
+      sendSerial(index, dataOutput);
   };
   
   var sendSerial = function(index, message) {
@@ -197,7 +191,6 @@
   var onClose = function(index) {
     arrayConexionPuertos[index] = null;
     limpiarArraySinValoresNulos(arrayConexionPuertos);
-    console.log(arrayConexionPuertos);
     statusLine.textContent = "Hover here to connect";
     statusLine.className = "";
   };

@@ -61,15 +61,15 @@ var serial_lib = (function() {
     chrome.serial.getDevices(callback);
   };
 
-  var openDevice = function(index, path, callback) {
-    chrome.serial.connect(path, { bitrate: 57600 }, function(connectionInfo) {
+  var openDevice = function(configuration, callback) {
+    chrome.serial.connect(configuration.pathSerialPort, configuration.connectionOptions, function(connectionInfo) {
       var device = null;
       var connectionId = null;
       if (connectionInfo) {
-        device = new DeviceConnection(index, connectionInfo.connectionId);
+        device = new DeviceConnection(configuration.index, connectionInfo.connectionId);
         connectionId = connectionInfo.connectionId;
       }
-      callback(device, connectionId, index);
+      callback(device, connectionId, configuration.index);
     });
   };
   

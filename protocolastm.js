@@ -102,12 +102,6 @@ function ProtocolASTM () {
   this.currentLevel = 0;
 }
 
-ProtocolASTM.prototype.cleanSpecialCharacters = function (data) {
-  // backslash (\)
-  var newData = data.replace(/\\/g, "\\\\");
-  return newData;
-};
-
 
 // Create Header
 ProtocolASTM.prototype.createHeader = function (data, fields) {
@@ -208,24 +202,22 @@ ProtocolASTM.prototype.readInputData = function (data) {
   var currentPositionPatient = 0;
   var currentPositionOrder = 0;
 
-  // Clean special character
-  var newData = this.cleanSpecialCharacters(data);
   // Convert the data to fields
-  fields = this.createFields(newData);
+  fields = this.createFields(data);
   // Create Header
-  this.createHeader(newData, fields);
+  this.createHeader(data, fields);
   // Create Patient
-  this.createPatient(newData, fields);
+  this.createPatient(data, fields);
   // Create Order
-  this.createOrder(newData, fields);
+  this.createOrder(data, fields);
   // Create Result
-  this.createResult(newData, fields);
+  this.createResult(data, fields);
   // Create Query
-  this.createQuery(newData, fields);
+  this.createQuery(data, fields);
   // Create Comments
-  this.createComments(newData, fields);
+  this.createComments(data, fields);
   // Create Final Record
-  this.createFinalRecord(newData, fields);
+  this.createFinalRecord(data, fields);
 };
 
 
