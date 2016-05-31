@@ -49,20 +49,41 @@ DriverForAnalyzer.prototype.cleanSpecialCharacters = function (data) {
 };
 
 
-DriverForAnalyzer.prototype.readInputData = function (data, configuration) {
-    console.log("Datos de entrada: " + data);
-    console.log(configuration);
-    // Concatenar los datos recibidos
-    this.stringReceived += data;
+DriverForAnalyzer.prototype.readingDataEntry = function (configuration) {
     // Obtener la última posición del string de datos recibidos
     var lastPosition = this.stringReceived.length - 1;
     // Validar si requiere una respuesta del Driver
     if (this.isResponseRequired(configuration.specialCharacters, this.stringReceived.charCodeAt(lastPosition))) {
       var newStringReceived = this.cleanSpecialCharacters(this.stringReceived);
       this.protocolASTM.readInputData(newStringReceived);
+      // Imprimir en pantalla el protocolo ASTM
       console.log(this.protocolASTM);
     }
-    return "Respuesta a : " + data;
+};
+
+
+DriverForAnalyzer.prototype.responseDataEntry = function (configuration) {
+    var dataOutput = "";
+    // Obtener la última posición del string de datos recibidos
+    var lastPosition = this.stringReceived.length - 1;
+    // Validar si requiere una respuesta del Driver
+    if (this.isResponseRequired(configuration.specialCharacters, this.stringReceived.charCodeAt(lastPosition))) {
+      // Respuesta automática
+      dataOutput = "Respuesta automatica : " + this.stringReceived;
+      // Limpiar el buffer de los datos recibidos
+      this.stringReceived = "";
+    }
+    return dataOutput;
+};
+
+
+DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data, configuration) {
+    // Concatenar los datos recibidos
+    this.stringReceived += data;
+    // Lectura del Driver
+    this.readingDataEntry(configuration);
+    // Respuesta del Driver
+    return this.responseDataEntry(configuration);
 };
 
 

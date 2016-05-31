@@ -162,7 +162,7 @@
 
  var onReceive = function(index, connectionId, data) {
     var dataOutput = "";
-    dataOutput = arrayDriverAnalyzer[index].readInputData(data, configurationOfAnalyzer.items[index]);
+    dataOutput = arrayDriverAnalyzer[index].readingAndResponseDataEntry(data, configurationOfAnalyzer.items[index]);
     if (dataOutput.length > 0)
       sendSerial(index, dataOutput);
   };
