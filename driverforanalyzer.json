@@ -1,0 +1,20 @@
+[
+    {
+        "index": null,
+        "nameDriverAnalyzer": "DriverForCA1500",
+        "pathSerialPort": null,
+        "connectionOptions": { "bitrate": 57600 }
+    },
+    {
+        "index": null,
+        "nameDriverAnalyzer": "",
+        "pathSerialPort": null,
+        "connectionOptions": { "bitrate": 57600 }
+    },
+    {
+        "index": null,
+        "nameDriverAnalyzer": "",
+        "pathSerialPort": null,
+        "connectionOptions": { "bitrate": 57600 }
+    }
+]
