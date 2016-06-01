@@ -103,7 +103,7 @@
             configurationOfAnalyzer.items[indexPuertoActual].pathSerialPort = path;
             openDevice(configurationOfAnalyzer.items[indexPuertoActual]);
             var classNameDriverAnalyzer = configurationOfAnalyzer.items[indexPuertoActual].nameDriverAnalyzer;
-            var driverAnalyzer = new window[classNameDriverAnalyzer]();
+            var driverAnalyzer = new window[classNameDriverAnalyzer](configurationOfAnalyzer.items[indexPuertoActual]);
             arrayDriverAnalyzer.push(driverAnalyzer);
           } else {
             closeDevice(indexPuertoActual);
@@ -160,9 +160,9 @@
     statusLine.textContent = "Connected";
   };
 
- var onReceive = function(index, connectionId, data) {
+  var onReceive = function(index, connectionId, data) {
     var dataOutput = "";
-    dataOutput = arrayDriverAnalyzer[index].readingAndResponseDataEntry(data, configurationOfAnalyzer.items[index]);
+    dataOutput = arrayDriverAnalyzer[index].readingAndResponseDataEntry(data);
     if (dataOutput.length > 0)
       sendSerial(index, dataOutput);
   };

@@ -17,12 +17,26 @@ RecordASTM.prototype.isValidIdentifier = function (id) {
   return false;
 };
 
-RecordASTM.prototype.createRecord = function (data, fields) {
+RecordASTM.prototype.isValidFieldsNumber = function (fields) {
+  if (fields.length === this.numberFieldsValid)
+    return true;
+  return false;
+};
+
+RecordASTM.prototype.isValidRecord = function (data, fields) {
   var id = data.substr(0, 1);
-  if (this.isValidIdentifier(id)) {
+  if (this.isValidIdentifier(id) && this.isValidFieldsNumber(fields))
+    return true;
+  return false;
+};
+
+RecordASTM.prototype.createRecord = function (data, fields) {
+  if (this.isValidRecord(data, fields)) {
     this.data = data;
     this.fields = fields;
+    return true;
   }
+  return false;
 };
 
 // Header ASTM
@@ -31,6 +45,7 @@ function HeaderASTM () {
   this.typeIdentifier = "H";
   this.patients = [];
   this.comments = [];
+  this.numberFieldsValid = 14;
 }
 
 // inherits From RecordASTM
@@ -43,6 +58,7 @@ function PatientASTM () {
   this.orders = [];
   this.queries = [];
   this.comments = [];
+  this.numberFieldsValid = 35;
 }
 
 // inherits From RecordASTM
@@ -54,6 +70,7 @@ function OrderASTM () {
   this.typeIdentifier = "O";
   this.results = [];
   this.comments = [];
+  this.numberFieldsValid = 26;
 }
 
 // inherits From RecordASTM
@@ -64,6 +81,7 @@ function ResultASTM () {
   this.level = 3;
   this.typeIdentifier = "R";
   this.comments = [];
+  this.numberFieldsValid = 14;
 }
 
 // inherits From RecordASTM
@@ -73,6 +91,7 @@ ResultASTM.prototype = new RecordASTM();
 function QueryASTM () {
   this.level = 2;
   this.typeIdentifier = "Q";
+  this.numberFieldsValid = 13;
 }
 
 // inherits From RecordASTM
@@ -82,6 +101,7 @@ QueryASTM.prototype = new RecordASTM();
 function FinalrecordASTM () {
   this.level = 0;
   this.typeIdentifier = "L";
+  this.numberFieldsValid = 3;
 }
 
 // inherits From RecordASTM
@@ -90,6 +110,7 @@ FinalrecordASTM.prototype = new RecordASTM();
 // Comment ASTM
 function CommentASTM () {
   this.typeIdentifier = "C";
+  this.numberFieldsValid = 5;
 }
 
 // inherits From RecordASTM
@@ -110,7 +131,9 @@ ProtocolASTM.prototype.createHeader = function (data, fields) {
   if (header.fields.length > 0) {
     this.currentLevel = this.header.level;
     this.header = header;
+    return true;
   }
+  return false;
 };
 
 // Create Patient
@@ -120,7 +143,9 @@ ProtocolASTM.prototype.createPatient = function (data, fields) {
   if (patient.fields.length > 0) {
     this.currentLevel = patient.level;
     this.header.patients.push(patient);
+    return true;
   }
+  return false;
 };
 
 // Create Order
@@ -131,7 +156,9 @@ ProtocolASTM.prototype.createOrder = function (data, fields) {
     this.currentLevel = order.level;
     currentPositionPatient = this.header.patients.length - 1;
     this.header.patients[currentPositionPatient].orders.push(order);
+    return true;
   }
+  return false;
 };
 
 // Create Result
@@ -143,7 +170,9 @@ ProtocolASTM.prototype.createResult = function (data, fields) {
     currentPositionPatient = this.header.patients.length - 1;
     currentPositionOrder = this.header.patients[currentPositionPatient].orders.length - 1;
     this.header.patients[currentPositionPatient].orders[currentPositionOrder].results.push(result);
+    return true;
   }
+  return false;
 };
 
 
@@ -155,7 +184,9 @@ ProtocolASTM.prototype.createQuery = function (data, fields) {
     this.currentLevel = order.level;
     currentPositionPatient = this.header.patients.length - 1;
     this.header.patients[currentPositionPatient].queries.push(query);
+    return true;
   }
+  return false;
 };
 
 // Create Comments
@@ -183,7 +214,9 @@ ProtocolASTM.prototype.createComments = function (data, fields) {
       this.header.patients[currentPositionPatient].orders[currentPositionOrder].results[currentPositionResult].comments.push(comment);
       break;
     }
+    return true;
   }
+  return false;
 };
 
 // Create Final Record
@@ -193,7 +226,9 @@ ProtocolASTM.prototype.createFinalRecord = function (data, fields) {
   if (finalrecord.fields.length > 0) {
     this.currentLevel = this.finalrecord.level;
     this.finalrecord = finalrecord;
+    return true;
   }
+  return false;
 };
 
 
@@ -205,19 +240,21 @@ ProtocolASTM.prototype.readInputData = function (data) {
   // Convert the data to fields
   fields = this.createFields(data);
   // Create Header
-  this.createHeader(data, fields);
+  var recordCreated = this.createHeader(data, fields) ||
   // Create Patient
-  this.createPatient(data, fields);
+  this.createPatient(data, fields) ||
   // Create Order
-  this.createOrder(data, fields);
+  this.createOrder(data, fields) ||
   // Create Result
-  this.createResult(data, fields);
+  this.createResult(data, fields) ||
   // Create Query
-  this.createQuery(data, fields);
+  this.createQuery(data, fields) ||
   // Create Comments
-  this.createComments(data, fields);
+  this.createComments(data, fields) ||
   // Create Final Record
   this.createFinalRecord(data, fields);
+  
+  return recordCreated;
 };
 
 
