@@ -1,7 +1,7 @@
 [
     {
         "index": null,
-        "nameDriverAnalyzer": "DriverForCA1500",
+        "nameDriverAnalyzer": "DriverForTesting",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 },
         "specialCharacters":  [

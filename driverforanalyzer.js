@@ -62,10 +62,13 @@ DriverForAnalyzer.prototype.readingDataEntry = function (data) {
   var newStringReceived = this.cleanSpecialCharacters(this.stringReceived);
   // Leer la data desde el protocolo ASTM
   var readStatus = this.protocolASTM.readInputData(newStringReceived);
-  //if (readStatus)
-    // Imprimir en pantalla el protocolo ASTM
-    console.log(this.protocolASTM);
   return readStatus;
+};
+
+
+DriverForAnalyzer.prototype.driverResponse = function () {
+  // < Aqui se debe crear la respuesta de cada Driver >
+  return ""  ;
 };
 
 
@@ -76,14 +79,13 @@ DriverForAnalyzer.prototype.responseDataEntry = function (readStatus) {
   if ( this.isResponseRequired() ) {
     // Validar que los datos de entrada se hayan leído correctamente
     if ( readStatus )
-      // Respuesta automática
-      dataOutput = "Respuesta automatica : " + this.stringReceived;
+      // Respuesta del Driver
+      dataOutput = this.driverResponse();
     // Limpiar el buffer de los datos recibidos
     this.stringReceived = "";
   }
   return dataOutput;
 };
-
 
 DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
   // Leer los datos de entrada
@@ -93,12 +95,20 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
 };
 
 
-function DriverForCA1500 (configuration) {
+/*  Esta es la implementación del "Driver para pruebas"  */
+
+function DriverForTesting (configuration) {
   this.configuration = configuration;
   console.log(this.configuration);
 }
 
 // inherits From DriverForAnalyzer
-DriverForCA1500.prototype = new DriverForAnalyzer(null);
+DriverForTesting.prototype = new DriverForAnalyzer(null);
 
 
+DriverForTesting.prototype.driverResponse = function () {
+  // Imprimir en pantalla el protocolo ASTM
+  console.log(this.protocolASTM);
+  // Respuesta automática
+  return "Respuesta automatica : " + this.stringReceived;
+};
