@@ -22,17 +22,49 @@ ConfigurationOfAnalyzer.prototype.loadConfiguration = function (callback) {
 };
 
 
-function DriverForAnalyzer (configuration) {
-  this.protocolASTM = new ProtocolASTM();
-  this.stringReceived = '';
-  this.configuration = configuration;
+function DriverForAnalyzer (newConfiguration) {
+  var protocolASTM = new ProtocolASTM();
+  var stringReceived = '';
+  var configuration = newConfiguration;
+  
+  this.setProtocolASTM = function(newProtocolASTM) {
+    protocolASTM = newProtocolASTM;
+  };
+  
+  this.getProtocolASTM = function() {
+    return protocolASTM;
+  };
+
+  this.setStringReceived = function(newStringReceived) {
+    stringReceived = newStringReceived;
+    
+  };
+  
+  this.addStringReceived = function(newStringReceived) {
+    stringReceived += newStringReceived;
+    
+  };
+
+  this.getStringReceived = function() {
+    return stringReceived;
+  };
+  
+  this.setConfiguration = function(newConfiguration) {
+    configuration = newConfiguration;
+  };
+  
+  this.getConfiguration = function() {
+    return configuration;
+  };
+
 }
+
 
 DriverForAnalyzer.prototype.isResponseRequired = function () {
   // Obtener la última posición del string de datos recibidos
-  var lastPosition = this.stringReceived.length - 1;
-  var asciiValue = this.stringReceived.charCodeAt(lastPosition);
-  var specialCharacters = this.configuration.specialCharacters;
+  var lastPosition = this.getStringReceived().length - 1;
+  var asciiValue = this.getStringReceived().charCodeAt(lastPosition);
+  var specialCharacters = this.getConfiguration().specialCharacters;
   var index = specialCharacters.findIndex(xobj => xobj.asciiValue==asciiValue);
   if ( index < 0 )
     return false;
@@ -57,17 +89,17 @@ DriverForAnalyzer.prototype.cleanSpecialCharacters = function (data) {
 
 DriverForAnalyzer.prototype.readingDataEntry = function (data) {
   // Concatenar los datos recibidos
-  this.stringReceived += data;
+  this.addStringReceived(data);
   // Nuevo string limpio de caracteres especiales
-  var newStringReceived = this.cleanSpecialCharacters(this.stringReceived);
+  var newStringReceived = this.cleanSpecialCharacters(this.getStringReceived());
   // Leer la data desde el protocolo ASTM
-  var readStatus = this.protocolASTM.readInputData(newStringReceived);
+  var readStatus = this.getProtocolASTM().readInputData(newStringReceived);
   return readStatus;
 };
 
 
 DriverForAnalyzer.prototype.driverResponse = function () {
-  // < Aqui se debe crear la respuesta de cada Driver >
+  // < Se debe heredar este metodo y crear la respuesta de cada Driver >
   return ""  ;
 };
 
@@ -82,7 +114,7 @@ DriverForAnalyzer.prototype.responseDataEntry = function (readStatus) {
       // Respuesta del Driver
       dataOutput = this.driverResponse();
     // Limpiar el buffer de los datos recibidos
-    this.stringReceived = "";
+    this.setStringReceived("");
   }
   return dataOutput;
 };
@@ -94,21 +126,26 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
   return this.responseDataEntry(readStatus);
 };
 
-
+///////////////////////////////////////////////////////////
 /*  Esta es la implementación del "Driver para pruebas"  */
+///////////////////////////////////////////////////////////
 
-function DriverForTesting (configuration) {
-  this.configuration = configuration;
-  console.log(this.configuration);
+function DriverForTesting (newConfiguration) {
+  this.setConfiguration(newConfiguration);
 }
 
 // inherits From DriverForAnalyzer
 DriverForTesting.prototype = new DriverForAnalyzer(null);
 
-
 DriverForTesting.prototype.driverResponse = function () {
+  // Imprimir en pantalla la configuración del driver
+  console.log(this.getConfiguration());
   // Imprimir en pantalla el protocolo ASTM
-  console.log(this.protocolASTM);
+  console.log(this.getProtocolASTM());
   // Respuesta automática
-  return "Respuesta automatica : " + this.stringReceived;
+  return "Respuesta automatica : " + this.getStringReceived();
 };
+
+////////////////////////////////////////
+/*  Hasta aquí "Driver para pruebas"  */
+////////////////////////////////////////
