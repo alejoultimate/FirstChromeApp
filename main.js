@@ -11,7 +11,6 @@
     if (!serial_lib)
       throw "You must include serial.js before";
     configurationOfAnalyzer.loadConfiguration(onLoadAnalyzerJSON);
-    initFormPuertoSerial();
     //btnClose.addEventListener("click", closeDevice);
     //window.addEventListener("hashchange", changeTab);
     document.querySelector(".refresh").addEventListener("click", refreshPorts);
@@ -50,52 +49,110 @@
     
   };
 
-
-  var initFormPuertoSerial = function() {
-    crearBotonesPuertoSerial();
+  
+  var createChkSerialPort = function (index) {
+    // Crear input tipo checkbox para la conexión del puerto serial
+    var inp = document.createElement("INPUT");
+    inp.setAttribute("type", "checkbox");
+    inp.setAttribute("class", "checkbox");
+    inp.setAttribute("name", "chkPuertoSerial" + index);
+    inp.setAttribute("id", "chkPuertoSerial" + index);
+    document.getElementById("puertos").appendChild(inp);
+    
+    return inp;
   };
   
-  var crearBotonesPuertoSerial = function() {
+  var createBtnSerialPort = function (path) {
+    // Crear boton puerto serial
+    var btn = document.createElement("button");
+    var t = document.createTextNode(path);
+    btn.appendChild(t);
+    btn.setAttribute("class", "button");
+    
+    return btn;
+  };
+  
+
+  var generateViewSerialPort = function () {
+
+      //Create a HTML Table element.
+      var table = document.createElement("TABLE");
+      table.id = "tblPuertos";
+      table.border = "1";
+
+    
       serial_lib.getDevices(function(puertos) {
-          for (var i = 0; i < puertos.length; ++i) {
-            // Crear tabla de puertos
-            var table = document.getElementById("tblPuertos");
-            var row = table.insertRow(0);
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
+        
+          //Build an array containing Customer records.
+          var arrayVistaPuertos = [];
+          arrayVistaPuertos.push(["Customer Id", "Nombre de la interfaz", "Conectar", "Editar"]);
+
+          var path = "";
+          var btn = null;
+          var inp = null;
+          var descriptionAnalyzer = "";
+          for (var indexAnalyzer = 0; indexAnalyzer < puertos.length; ++indexAnalyzer) {
+            // Crear etiqueta con el nombre de la interfaz
+            descriptionAnalyzer = configurationOfAnalyzer.items[indexAnalyzer].descriptionAnalyzer;
             // Crear boton puerto serial
-            var path = puertos[i].path;
-            var btn = document.createElement("button");
-            var t = document.createTextNode(path);
-            btn.appendChild(t);
-            btn.setAttribute("class", "button");
-            document.body.appendChild(btn);
-            document.getElementById("misOperaciones").appendChild(btn);
-            // Adicionar el botón a la tabla de puertos
-            cell1.appendChild( btn );
-            // Crear input tipo checkbox para la conexión del puerto serial
-            var inp = document.createElement("INPUT");
-            inp.setAttribute("type", "checkbox");
-            inp.setAttribute("class", "checkbox");
-            inp.setAttribute("name", "chkPuertoSerial" + i);
-            inp.setAttribute("id", "chkPuertoSerial" + i);
-            document.getElementById("puertos").appendChild(inp);
-            // Adicionar el input tipo checkbox a la tabla de puertos
-            cell2.appendChild( inp );
-            // Crear presentación del input tipo checkbox
-            var initialize = new Switchery(inp);
+            path = puertos[indexAnalyzer].path;
+            btn = createBtnSerialPort(path);
+             // Crear input tipo checkbox para la conexión del puerto serial
+            inp = createChkSerialPort(indexAnalyzer);
+            arrayVistaPuertos.push([indexAnalyzer, configurationOfAnalyzer.items[indexAnalyzer].descriptionAnalyzer, inp, btn]);
           }
+          
+    
+          //Get the count of columns.
+          var columnCount = arrayVistaPuertos[0].length;
+    
+          //Add the header row.
+          var row = table.insertRow(-1);
+          for (var posHeader = 0; posHeader < columnCount; posHeader++) {
+              var headerCell = document.createElement("TH");
+              headerCell.innerHTML = arrayVistaPuertos[0][posHeader];
+              row.appendChild(headerCell);
+          }
+    
+          //Add the data rows.
+          for (var i = 1; i < arrayVistaPuertos.length; i++) {
+              row = table.insertRow(-1);
+              for (var j = 0; j < columnCount; j++) {
+                  var cell = row.insertCell(-1);
+                  switch (j) {
+                    case 2:
+                      cell.appendChild( arrayVistaPuertos[i][j] );
+                      var initialize = new Switchery( arrayVistaPuertos[i][j] );
+                      break;
+                    case 3:
+                      cell.appendChild( arrayVistaPuertos[i][j] );
+                      break;
+                    default:
+                      cell.innerHTML = arrayVistaPuertos[i][j];  
+                  }
+              }
+          }
+          
+          
       });
+      
+      var dvTable = document.getElementById("puertos");
+      //dvTable.innerHTML = "";
+      dvTable.appendChild(table);
+      
+      
       var parentTblPuertos = document.querySelector("#tblPuertos");
       parentTblPuertos.addEventListener("change", opencloseDevice, false);
+
   };
+
   
   
   function opencloseDevice(e) {
     try {
       if (e.target !== e.currentTarget) {
           var clickedItem = e.target.id;
-          var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex;
+          var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex - 1;
           var puertoChequeado = document.getElementById(clickedItem).checked;
           if ( puertoChequeado ) {
             var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
@@ -210,6 +267,7 @@
 
   var onLoadAnalyzerJSON = function(response) {
     configurationOfAnalyzer.items = JSON.parse(response);
+    generateViewSerialPort();
   };
 
 /////////////////////////////////////////////////////////////////////////

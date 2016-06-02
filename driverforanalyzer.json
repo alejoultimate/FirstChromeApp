@@ -2,6 +2,7 @@
     {
         "index": null,
         "nameDriverAnalyzer": "DriverForTesting",
+        "descriptionAnalyzer": "Interfaz para realizar pruebas",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 },
         "specialCharacters":  [
@@ -60,12 +61,14 @@
     {
         "index": null,
         "nameDriverAnalyzer": "",
+        "descriptionAnalyzer": "v",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 }
     },
     {
         "index": null,
         "nameDriverAnalyzer": "",
+        "descriptionAnalyzer": "v",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 }
     }
