@@ -122,6 +122,12 @@
   };
 
   
+  var addDriverAnalyzer = function (index) {
+    var classNameDriverAnalyzer = configurationOfAnalyzer.items[index].nameDriverAnalyzer;
+    var driverAnalyzer = new window[classNameDriverAnalyzer](configurationOfAnalyzer.items[index]);
+    arrayDriverAnalyzer.push(driverAnalyzer);
+  };
+  
   
   function opencloseDevice(e) {
     if (e.target !== e.currentTarget) {
@@ -132,13 +138,12 @@
         var puertoChequeado = document.getElementById(clickedItem).checked;
         try {
           if ( puertoChequeado ) {
+            // Adicionar un nuevo driver analizador
+            addDriverAnalyzer(indexPuertoActual);
             var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
             configurationOfAnalyzer.items[indexPuertoActual].index = indexPuertoActual;
             configurationOfAnalyzer.items[indexPuertoActual].pathSerialPort = path;
             openDevice(configurationOfAnalyzer.items[indexPuertoActual]);
-            var classNameDriverAnalyzer = configurationOfAnalyzer.items[indexPuertoActual].nameDriverAnalyzer;
-            var driverAnalyzer = new window[classNameDriverAnalyzer](configurationOfAnalyzer.items[indexPuertoActual]);
-            arrayDriverAnalyzer.push(driverAnalyzer);
           } else {
             closeDevice(indexPuertoActual);
           }
