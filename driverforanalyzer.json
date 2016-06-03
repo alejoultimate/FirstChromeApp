@@ -61,14 +61,14 @@
     {
         "index": null,
         "nameDriverAnalyzer": "",
-        "descriptionAnalyzer": "v",
+        "descriptionAnalyzer": "",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 }
     },
     {
         "index": null,
         "nameDriverAnalyzer": "",
-        "descriptionAnalyzer": "v",
+        "descriptionAnalyzer": "",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 }
     }

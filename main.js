@@ -1,7 +1,7 @@
 (function() {
   //var btnClose = document.querySelector(".close");
   var logArea = document.querySelector(".log");
-  var statusLine = document.querySelector("#status");
+  var statusLine;
   var serialDevices = document.querySelector(".serial_devices");
   var arrayConexionPuertos = [];
   var configurationOfAnalyzer = new ConfigurationOfAnalyzer();
@@ -11,16 +11,11 @@
     if (!serial_lib)
       throw "You must include serial.js before";
     configurationOfAnalyzer.loadConfiguration(onLoadAnalyzerJSON);
-    //btnClose.addEventListener("click", closeDevice);
-    //window.addEventListener("hashchange", changeTab);
-    document.querySelector(".refresh").addEventListener("click", refreshPorts);
-    refreshPorts();
   };
   
   
   var openDevice = function(configuration) {
-    statusLine.classList.add("on");
-    statusLine.textContent = "Connecting";
+    statusLine[configuration.index].textContent = "Connecting";
     serial_lib.openDevice(configuration, onOpen);
   };
   
@@ -30,25 +25,6 @@
    }
   };
   
-  
-  var refreshPorts = function() {
-    while (serialDevices.options.length > 0)
-      serialDevices.options.remove(0);
-
-    serial_lib.getDevices(function(puertos) {
-      logSuccess("got " + puertos.length + " ports");
-      for (var i = 0; i < puertos.length; ++i) {
-        var path = puertos[i].path;
-        serialDevices.options.add(new Option(path, path));
-        if (i === 1 || /usb/i.test(path) && /tty/i.test(path)) {
-          serialDevices.selectionIndex = i;
-          logSuccess("auto-selected " + path);
-        }
-      }
-    });
-    
-  };
-
   
   var createChkSerialPort = function (index) {
     // Crear input tipo checkbox para la conexión del puerto serial
@@ -72,21 +48,28 @@
     return btn;
   };
   
+  var createDivStatusSerialPort = function (index) {
+    // Crear un div para manejar el estado del puerto serial
+    var div = document.createElement("div");
+    var text = document.createTextNode("No connected");
+    div.appendChild(text);
+    div.setAttribute("id", "status");
+
+    return div;
+  };
+  
 
   var generateViewSerialPort = function () {
-
       //Create a HTML Table element.
       var table = document.createElement("TABLE");
       table.id = "tblPuertos";
       table.border = "1";
-
-    
+      // Obtener el listado de todos los dispositivos
       serial_lib.getDevices(function(puertos) {
-        
-          //Build an array containing Customer records.
+          // Array que contiene los puertos seriales que vamos a listar en pantalla
           var arrayVistaPuertos = [];
-          arrayVistaPuertos.push(["Customer Id", "Nombre de la interfaz", "Conectar", "Editar"]);
-
+          arrayVistaPuertos.push(["# indice", "Nombre de la interfaz", "Conectar", "Editar", "Estado"]);
+          // Definir variables
           var path = "";
           var btn = null;
           var inp = null;
@@ -99,13 +82,12 @@
             btn = createBtnSerialPort(path);
              // Crear input tipo checkbox para la conexión del puerto serial
             inp = createChkSerialPort(indexAnalyzer);
-            arrayVistaPuertos.push([indexAnalyzer, configurationOfAnalyzer.items[indexAnalyzer].descriptionAnalyzer, inp, btn]);
+            // Crear un div para manejar el estado del puerto serial
+            div = createDivStatusSerialPort(indexAnalyzer);
+            arrayVistaPuertos.push([indexAnalyzer, descriptionAnalyzer, inp, btn, div]);
           }
-          
-    
           //Get the count of columns.
           var columnCount = arrayVistaPuertos[0].length;
-    
           //Add the header row.
           var row = table.insertRow(-1);
           for (var posHeader = 0; posHeader < columnCount; posHeader++) {
@@ -113,47 +95,42 @@
               headerCell.innerHTML = arrayVistaPuertos[0][posHeader];
               row.appendChild(headerCell);
           }
-    
           //Add the data rows.
           for (var i = 1; i < arrayVistaPuertos.length; i++) {
               row = table.insertRow(-1);
               for (var j = 0; j < columnCount; j++) {
                   var cell = row.insertCell(-1);
-                  switch (j) {
-                    case 2:
+                  switch ( typeof arrayVistaPuertos[i][j] ) {
+                    case "object":
                       cell.appendChild( arrayVistaPuertos[i][j] );
-                      var initialize = new Switchery( arrayVistaPuertos[i][j] );
-                      break;
-                    case 3:
-                      cell.appendChild( arrayVistaPuertos[i][j] );
+                      if ( j === 2 ) {
+                        var initialize = new Switchery( arrayVistaPuertos[i][j] );
+                      }
                       break;
                     default:
-                      cell.innerHTML = arrayVistaPuertos[i][j];  
+                      cell.innerHTML = arrayVistaPuertos[i][j];
                   }
               }
           }
-          
-          
       });
-      
+      // Adicionar una tabla al Div de puertos
       var dvTable = document.getElementById("puertos");
-      //dvTable.innerHTML = "";
       dvTable.appendChild(table);
-      
-      
+      // Crear el listener para los cambios de estado del checkbox que hace la conexión al puerto serial
       var parentTblPuertos = document.querySelector("#tblPuertos");
       parentTblPuertos.addEventListener("change", opencloseDevice, false);
-
   };
 
   
   
   function opencloseDevice(e) {
-    try {
-      if (e.target !== e.currentTarget) {
-          var clickedItem = e.target.id;
-          var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex - 1;
-          var puertoChequeado = document.getElementById(clickedItem).checked;
+    if (e.target !== e.currentTarget) {
+        // Crear el objeto para reportar el estado de la conexión del puerto serial
+        statusLine = document.querySelectorAll("#status");
+        var clickedItem = e.target.id;
+        var indexPuertoActual = document.getElementById(clickedItem).parentElement.parentElement.rowIndex - 1;
+        var puertoChequeado = document.getElementById(clickedItem).checked;
+        try {
           if ( puertoChequeado ) {
             var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
             configurationOfAnalyzer.items[indexPuertoActual].index = indexPuertoActual;
@@ -165,12 +142,12 @@
           } else {
             closeDevice(indexPuertoActual);
           }
-      }
-      e.stopPropagation();
+        }
+        catch(err) {
+          logError(indexPuertoActual, "Ocurrió el siguiente error: " + err.message);
+        }
     }
-    catch(err) {
-      logError("Ocurrió el siguiente error: " + err.message);
-    }
+    e.stopPropagation();
   }
 
   
@@ -196,15 +173,15 @@
       log("<span style='color: green;'>" + msg + "</span>");
   };
 
-  var logError = function(msg) {
-    statusLine.className = "error";
-    statusLine.textContent = msg;
+  var logError = function(index, msg) {
+    statusLine[index].className = "error";
+    statusLine[index].textContent = msg;
     log("<span style='color: red;'>" + msg + "</span>");
   };
 
   var onOpen = function(newConnection, connectionId, index) {
     if (newConnection === null) {
-      logError("Failed to open device.");
+      logError(index, "Failed to open device.");
       return;
     }
     arrayConexionPuertos[index] = newConnection;
@@ -214,7 +191,7 @@
     log("Id. conexion ABIERTO " + connectionId);
     logSuccess("Device opened.");
 //    enableOpenButton(false);
-    statusLine.textContent = "Connected";
+    statusLine[index].textContent = "Connected";
   };
 
   var onReceive = function(index, connectionId, data) {
@@ -229,7 +206,7 @@
       return;
     }
     if (!message) {
-      logError("Nothing to send!");
+      logError(index, "Nothing to send!");
       return;
     }
     if (message.charAt(message.length - 1) !== '\n') {
@@ -240,7 +217,7 @@
   
   var onError = function(index, errorInfo) {
     if (errorInfo.error !== 'timeout') {
-      logError("Fatal error encounted. Dropping connection.");
+      logError(index, "Fatal error encounted. Dropping connection.");
       closeDevice(index);
     }
   };
@@ -248,8 +225,8 @@
   var onClose = function(index) {
     arrayConexionPuertos[index] = null;
     limpiarArraySinValoresNulos(arrayConexionPuertos);
-    statusLine.textContent = "Hover here to connect";
-    statusLine.className = "";
+    statusLine[index].textContent = "No connected";
+    statusLine[index].className = "";
   };
   
   function limpiarArraySinValoresNulos(array) {
@@ -274,9 +251,8 @@
 /// mi código de prueba
 /////////////////////////////////////////////////////////////////////////
 
-  function bienvenida() {
-    document.querySelector('#saludo').innerText =
-      'Hola, bienvenido a la mejor app para puerto serial! hoy es ' + new Date();
+  function nombreModuloApp() {
+    document.querySelector('#saludo').innerText = 'SIRIUS.SerialPort()';
   }
   
   
@@ -296,7 +272,7 @@
   }
   
   
-  addLoadEvent(bienvenida);
+  addLoadEvent(nombreModuloApp);
 
   
   init();
