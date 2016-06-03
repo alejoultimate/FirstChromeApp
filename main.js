@@ -20,9 +20,9 @@
   };
   
   var closeDevice = function(index) {
-   if (arrayConexionPuertos[index] !== null) {
+    if (typeof arrayConexionPuertos[index] != "undefined") {
      arrayConexionPuertos[index].close();
-   }
+    }
   };
   
   
@@ -138,11 +138,11 @@
         var puertoChequeado = document.getElementById(clickedItem).checked;
         try {
           if ( puertoChequeado ) {
-            // Adicionar un nuevo driver analizador
-            addDriverAnalyzer(indexPuertoActual);
             var path = document.getElementsByTagName('button')[indexPuertoActual].textContent;
             configurationOfAnalyzer.items[indexPuertoActual].index = indexPuertoActual;
             configurationOfAnalyzer.items[indexPuertoActual].pathSerialPort = path;
+            // Adicionar un nuevo driver analizador
+            addDriverAnalyzer(indexPuertoActual);
             openDevice(configurationOfAnalyzer.items[indexPuertoActual]);
           } else {
             closeDevice(indexPuertoActual);
