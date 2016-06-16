@@ -20,5 +20,4 @@ describe("DriverForAnalyzer", function() {
     expect(newData).toEqual(initialData);
   });
   
-  
 });

@@ -21,6 +21,37 @@ ConfigurationOfAnalyzer.prototype.loadConfiguration = function (callback) {
   xobj.send(null);  
 };
 
+ConfigurationOfAnalyzer.prototype.loadjscssfile = function (filename, filetype) {
+  var fileref;
+  
+  if (filetype=="js"){ //if filename is a external JavaScript file
+        fileref=document.createElement('script');
+        fileref.setAttribute("type","text/javascript");
+        fileref.setAttribute("src", filename);
+    }
+    else if (filetype=="css"){ //if filename is an external CSS file
+        fileref=document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
+        fileref.setAttribute("href", filename);
+    }
+    if (typeof fileref!="undefined") 
+      document.body.appendChild(fileref);
+};
+
+ConfigurationOfAnalyzer.prototype.createListJSFile = function () {
+  this.loadConfiguration(this.onLoadConfigurationOfAnalyzer);
+};
+
+
+ConfigurationOfAnalyzer.prototype.onLoadConfigurationOfAnalyzer = function(response) {
+  conf.items = JSON.parse(response);
+  for ( pos = 0; pos < conf.items.length; pos++ ) {
+    if ( conf.items[pos].nameFileJS.length > 0 )
+      conf.loadjscssfile(conf.items[pos].nameFileJS, "js");
+  }
+};
+
 
 function DriverForAnalyzer (newConfiguration) {
   var protocolASTM = new ProtocolASTM();
@@ -126,26 +157,7 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
   return this.responseDataEntry(readStatus);
 };
 
-///////////////////////////////////////////////////////////
-/*  Esta es la implementación del "Driver para pruebas"  */
-///////////////////////////////////////////////////////////
 
-function DriverForTesting (newConfiguration) {
-  this.setConfiguration(newConfiguration);
-}
-
-// inherits From DriverForAnalyzer
-DriverForTesting.prototype = new DriverForAnalyzer(null);
-
-DriverForTesting.prototype.driverResponse = function () {
-  // Imprimir en pantalla la configuración del driver
-  console.log(this.getConfiguration());
-  // Imprimir en pantalla el protocolo ASTM
-  console.log(this.getProtocolASTM());
-  // Respuesta automática
-  return "Respuesta automatica : " + this.getStringReceived();
-};
-
-////////////////////////////////////////
-/*  Hasta aquí "Driver para pruebas"  */
-////////////////////////////////////////
+// Crear dinamicamente archivos JavaScript
+var conf = new ConfigurationOfAnalyzer();
+conf.createListJSFile();
