@@ -279,6 +279,11 @@ ProtocolASTM.prototype.createFields = function (data) {
   return fields;
 };
 
+ProtocolASTM.prototype.isValidFormat = function (data) {
+  
+  
+  return true;
+};
 
 /*
 var protocol = new ProtocolASTM();

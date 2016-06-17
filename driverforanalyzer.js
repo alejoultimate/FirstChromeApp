@@ -39,7 +39,7 @@ ConfigurationOfAnalyzer.prototype.loadjscssfile = function (filename, filetype) 
       document.body.appendChild(fileref);
 };
 
-ConfigurationOfAnalyzer.prototype.createListJSFile = function () {
+ConfigurationOfAnalyzer.prototype.loadListJSFile = function () {
   this.loadConfiguration(this.onLoadConfigurationOfAnalyzer);
 };
 
@@ -96,6 +96,8 @@ DriverForAnalyzer.prototype.isResponseRequired = function () {
   var lastPosition = this.getStringReceived().length - 1;
   var asciiValue = this.getStringReceived().charCodeAt(lastPosition);
   var specialCharacters = this.getConfiguration().specialCharacters;
+  if (typeof specialCharacters === "undefined")
+    throw new Error( "No se encontraron caracteres especiales configurados para este driver." );
   var index = specialCharacters.findIndex(xobj => xobj.asciiValue==asciiValue);
   if ( index < 0 )
     return false;
@@ -160,4 +162,4 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
 
 // Crear dinamicamente archivos JavaScript
 var conf = new ConfigurationOfAnalyzer();
-conf.createListJSFile();
+conf.loadListJSFile();

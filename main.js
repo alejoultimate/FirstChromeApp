@@ -125,7 +125,7 @@
   var addDriverAnalyzer = function (index) {
     var classNameDriverAnalyzer = configurationOfAnalyzer.items[index].nameDriverAnalyzer;
     var driverAnalyzer = new window[classNameDriverAnalyzer](configurationOfAnalyzer.items[index]);
-    arrayDriverAnalyzer.push(driverAnalyzer);
+    arrayDriverAnalyzer[index] = driverAnalyzer;
   };
   
   
@@ -201,9 +201,14 @@
 
   var onReceive = function(index, connectionId, data) {
     var dataOutput = "";
-    dataOutput = arrayDriverAnalyzer[index].readingAndResponseDataEntry(data);
-    if (dataOutput.length > 0)
-      sendSerial(index, dataOutput);
+    try {
+      dataOutput = arrayDriverAnalyzer[index].readingAndResponseDataEntry(data);
+      if (dataOutput.length > 0)
+        sendSerial(index, dataOutput);
+    }
+    catch (error) {
+      logError(index, "Ocurrió un error al recibidos los datos: " + error.message);
+    }
   };
   
   var sendSerial = function(index, message) {

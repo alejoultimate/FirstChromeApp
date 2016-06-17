@@ -61,11 +61,22 @@
     },
     {
         "index": null,
-        "nameDriverAnalyzer": "",
-        "descriptionAnalyzer": "",
-        "nameFileJS": "",
+        "nameDriverAnalyzer": "DriverForTesting2",
+        "descriptionAnalyzer": "Interfaz para realizar pruebas 2",
+        "nameFileJS": "driverfortesting2.js",
         "pathSerialPort": null,
-        "connectionOptions": { "bitrate": 57600 }
+        "connectionOptions": { "bitrate": 57600 },
+        "specialCharacters":  [                                 {
+                                  "key": "CR",
+                                  "asciiValue": 13,
+                                  "responseRequired": true
+                                },
+                                {
+                                  "key": "LF",
+                                  "asciiValue": 10,
+                                  "responseRequired": true
+                                }
+                              ]
     },
     {
         "index": null,
@@ -73,6 +84,7 @@
         "descriptionAnalyzer": "",
         "nameFileJS": "",
         "pathSerialPort": null,
-        "connectionOptions": { "bitrate": 57600 }
+        "connectionOptions": { "bitrate": 57600 },
+        "specialCharacters":  []
     }
 ]
