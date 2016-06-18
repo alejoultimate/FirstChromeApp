@@ -280,9 +280,17 @@ ProtocolASTM.prototype.createFields = function (data) {
 };
 
 ProtocolASTM.prototype.isValidFormat = function (data) {
+  var fields = [];
+  var header = new HeaderASTM();
+  var patient = new PatientASTM();
+
+  // Convert the data to fields
+  fields = this.createFields(data);
+  // Validate the header format
+  var validFormat = header.isValidRecord(data, fields) ||
+  patient.isValidRecord(data, fields);
   
-  
-  return true;
+  return validFormat;
 };
 
 /*
