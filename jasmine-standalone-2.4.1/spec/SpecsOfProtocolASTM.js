@@ -63,12 +63,12 @@ describe( "ProtocolASTM", function() {
   
   it( "Obtener la data del Header despúes de modificada", function() {
     var header = new HeaderASTM();
-    var headerRecordModified = "";
+    var recordHeaderModified = "";
     
     header.setSenderID( "AnalyzerTesting^Blood Analysis^AnalyzerSystem^Data Manager" );
-    headerRecordModified = header.getData();
+    recordHeaderModified = header.getDataModified();
 
-    expect(headerRecordModified).toEqual("H|\\^&|||" + header.getSenderID()  + "|||||||||");
+    expect(recordHeaderModified).toEqual("H|\\^&|||" + header.getSenderID() + "|||||||||");
   });
 
 

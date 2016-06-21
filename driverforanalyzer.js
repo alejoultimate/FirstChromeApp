@@ -87,7 +87,7 @@ function DriverForAnalyzer (newConfiguration) {
   this.getConfiguration = function() {
     return configuration;
   };
-
+  
 }
 
 
@@ -137,10 +137,21 @@ DriverForAnalyzer.prototype.driverResponse = function () {
 };
 
 
-DriverForAnalyzer.prototype.convertDataToRecordASTM = function (data) {
-  // < Se debe heredar este metodo y transformar el dato a un registro ASTM válido >
+DriverForAnalyzer.prototype.convertDataToHeaderASTM = function (data) {
+  // < Se debe heredar este metodo y modificar la data >
   return "";
 };
+
+DriverForAnalyzer.prototype.convertDataToPatientASTM = function (data) {
+  // < Se debe heredar este metodo y modificar la data >
+  return "";
+};
+
+DriverForAnalyzer.prototype.toChangeData = function (data) {
+  // < Se debe heredar este metodo y cambiar la data en un protocolo ASTM >
+  return "";
+};
+
 
 DriverForAnalyzer.prototype.responseDataEntry = function (readStatus) {
   // Definir la variable de salida
@@ -166,8 +177,8 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
     // Leer los datos de entrada
     readStatus = this.readingDataEntry(data);
   } else {
-    // Convertir un dato a un registro ASTM válido
-    recordASTM = this.convertDataToRecordASTM(data);
+    // Cambiar la Data
+    recordASTM = this.toChangeData(data);
     // Validar si el registro ASTM tiene un formato válido
     readStatus = this.getProtocolASTM().isValidRecord(recordASTM);
   }

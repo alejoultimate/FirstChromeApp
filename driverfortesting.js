@@ -6,29 +6,59 @@ function DriverForTesting (newConfiguration) {
 DriverForTesting.prototype = new DriverForAnalyzer(null);
 
 
-// Implementar convertDataToRecordASTM
-DriverForTesting.prototype.convertDataToRecordASTM = function (data) {
-  var headerASTM = "";
-  var commentASTM = "";
-  var readStatus = false;
+// Convertir la Data en un registro Header ASTM
+DriverForTesting.prototype.convertDataToHeaderASTM = function (data) {
+  // Definir  variables locales
+  var header = new HeaderASTM();
+  var dataModified = "";
   
-  // Nuevo dato limpio de caracteres especiales
+  // Se limpian los caracteres especiales de la Data
   var cleanData = this.cleanSpecialCharacters(data);
+  // Se modifica la ID del remitente del Header
+  header.setSenderID(cleanData);
+  // Se obtiene la Data del Header modificada y se adiciona un caracter line feed (fin de linea)
+  // para que detecte el fin de la trama configurada en el archivo driverforanalyzer.json
+  dataModified = header.getDataModified() + String.fromCharCode(10);
+  // Leer la Data modificada
+  readStatus = this.readingDataEntry(dataModified);
   
-  // Crear un Header ASTM
-  headerASTM = "H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||2016329104641" + String.fromCharCode(10);
-  // Leer los datos de entrada
-  readStatus = this.readingDataEntry(headerASTM);
-  
-  // Limpiar el buffer de los datos recibidos
-  this.setStringReceived("");
-  
-  // Crear un Comment ASTM
-  commentASTM = "C|1|L|" + cleanData + "|" + String.fromCharCode(10);
-  // Leer los datos de entrada
-  readStatus = this.readingDataEntry(commentASTM);
+  // Retornar la Data
+  return dataModified;
+};
 
-  return commentASTM;
+// Para cambiar los datos
+DriverForTesting.prototype.toChangeData = function (data) {
+  // Definir  variables locales
+  var dataModified = "";
+
+  switch (true) {
+    case (data.indexOf("Header") != -1):
+      dataModified = this.convertDataToHeaderASTM(data);
+      break;
+    case (data.indexOf("Patient") != -1):
+      console.log("Patient");
+      break;
+    case (data.indexOf("Order") != -1):
+      console.log("Order");
+      break;
+    case (data.indexOf("Result") != -1):
+      console.log("Result");
+      break;
+    case (data.indexOf("Query") != -1):
+      console.log("Query");
+      break;
+    case (data.indexOf("Comment") != -1):
+      console.log("Comment");
+      break;
+    case (data.indexOf("FinalRecord") != -1):
+      console.log("FinalRecord");
+      break;
+    default:
+      console.log("Comment default");
+  }
+
+  // Retornar la Data
+  return dataModified;
 };
 
 // Implementar driverResponse

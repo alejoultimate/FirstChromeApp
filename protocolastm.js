@@ -90,7 +90,7 @@ function HeaderASTM () {
     items.senderID = value;
   };
   
-  this.getData = function() {
+  this.getDataModified = function() {
     var arrayItems = [];
     arrayItems[0] = this.getItems();
     var recordStringModified = arrayItems.map(this.getRecordModified);
