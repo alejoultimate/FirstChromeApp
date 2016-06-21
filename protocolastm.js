@@ -43,9 +43,65 @@ RecordASTM.prototype.createRecord = function (data, fields) {
 function HeaderASTM () {
   this.level = 0;
   this.typeIdentifier = "H";
+  var items = {
+    recordTypeID: "H",
+    delimiterDefinition: "\\^&",
+    messageControl: "",
+    password: "",
+    senderID: "",
+    senderStreetAddr: "",
+    reservedField: "",
+    senderTelNumber: "",
+    characteristicsOfSender: "",
+    receiverID: "",
+    commentOrSpecialInstructions: "",
+    processingID: "",
+    versionNumber: "",
+    dateAndTime: ""
+  };
   this.patients = [];
   this.comments = [];
   this.numberFieldsValid = 14;
+  
+  this.getItems = function() {
+    return items;
+  };
+  
+  this.getRecordModified = function(item) {
+    var recordModified =  [ item.recordTypeID,
+                            item.delimiterDefinition,
+                            item.messageControl,
+                            item.password,
+                            item.senderID,
+                            item.senderStreetAddr,
+                            item.reservedField,
+                            item.senderTelNumber,
+                            item.characteristicsOfSender,
+                            item.receiverID,
+                            item.commentOrSpecialInstructions,
+                            item.processingID,
+                            item.versionNumber,
+                            item.dateAndTime
+                          ].join("|");
+    return recordModified;
+  };
+  
+  this.setSenderID = function(value) {
+    items.senderID = value;
+  };
+  
+  this.getData = function() {
+    var arrayItems = [];
+    arrayItems[0] = this.getItems();
+    var recordStringModified = arrayItems.map(this.getRecordModified);
+    data = recordStringModified[0];
+    return data;
+  };
+  
+  this.getSenderID = function() {
+    return items.senderID;
+  };
+  
 }
 
 // inherits From RecordASTM

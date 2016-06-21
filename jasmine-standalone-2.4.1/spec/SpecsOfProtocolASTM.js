@@ -60,6 +60,16 @@ describe( "ProtocolASTM", function() {
     
     expect(isValidFormat).toEqual(false);
   });
+  
+  it( "Obtener la data del Header despúes de modificada", function() {
+    var header = new HeaderASTM();
+    var headerRecordModified = "";
+    
+    header.setSenderID( "AnalyzerTesting^Blood Analysis^AnalyzerSystem^Data Manager" );
+    headerRecordModified = header.getData();
+
+    expect(headerRecordModified).toEqual("H|\\^&|||" + header.getSenderID()  + "|||||||||");
+  });
 
 
 });
