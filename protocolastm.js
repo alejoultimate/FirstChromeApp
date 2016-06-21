@@ -98,14 +98,14 @@ function QueryASTM () {
 QueryASTM.prototype = new RecordASTM();
 
 // Finalrecord ASTM
-function FinalrecordASTM () {
+function FinalRecordASTM () {
   this.level = 0;
   this.typeIdentifier = "L";
   this.numberFieldsValid = 3;
 }
 
 // inherits From RecordASTM
-FinalrecordASTM.prototype = new RecordASTM();
+FinalRecordASTM.prototype = new RecordASTM();
 
 // Comment ASTM
 function CommentASTM () {
@@ -119,7 +119,7 @@ CommentASTM.prototype = new RecordASTM();
 
 function ProtocolASTM () {
   this.header = new HeaderASTM();
-  this.finalrecord = new FinalrecordASTM();
+  this.finalrecord = new FinalRecordASTM();
   this.currentLevel = 0;
 }
 
@@ -221,7 +221,7 @@ ProtocolASTM.prototype.createComments = function (data, fields) {
 
 // Create Final Record
 ProtocolASTM.prototype.createFinalRecord = function (data, fields) {
-  var finalrecord = new FinalrecordASTM();
+  var finalrecord = new FinalRecordASTM();
   finalrecord.createRecord(data, fields);
   if (finalrecord.fields.length > 0) {
     this.currentLevel = this.finalrecord.level;
@@ -279,16 +279,32 @@ ProtocolASTM.prototype.createFields = function (data) {
   return fields;
 };
 
-ProtocolASTM.prototype.isValidFormat = function (data) {
+ProtocolASTM.prototype.isValidRecord = function (data) {
   var fields = [];
   var header = new HeaderASTM();
   var patient = new PatientASTM();
+  var order = new OrderASTM();
+  var result = new ResultASTM();
+  var query = new QueryASTM();
+  var comment = new CommentASTM();
+  var finalRecord = new FinalRecordASTM();
 
   // Convert the data to fields
   fields = this.createFields(data);
   // Validate the header format
   var validFormat = header.isValidRecord(data, fields) ||
-  patient.isValidRecord(data, fields);
+  // Validate the patient format
+  patient.isValidRecord(data, fields) ||
+  // Validate the order format
+  order.isValidRecord(data, fields) ||
+  // Validate the result format
+  result.isValidRecord(data, fields) ||
+  // Validate the query format
+  query.isValidRecord(data, fields) ||
+  // Validate the comment format
+  comment.isValidRecord(data, fields) ||
+  // Validate the final record format
+  finalRecord.isValidRecord(data, fields);
   
   return validFormat;
 };
