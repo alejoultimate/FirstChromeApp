@@ -369,8 +369,12 @@ ProtocolASTM.prototype.isValidRecord = function (data) {
 
 
 var fileManager = new FileManager();
-fileManager.writeToLocal("/Log/LogSerialPortToASTM.txt");
-fileManager.writeToLocal("/tmp/LogTemporal.txt");
+var arr = [];
+
+arr[0] = "esto es una prueba grandiosa y me voy a dormir" + String.fromCharCode(10);
+arr[1] = "MARAVILLOSO" + String.fromCharCode(10);
+fileManager.writeToLocal("/Log/LogSerialPortToASTM.txt", arr);
+fileManager.writeToLocal("/tmp/LogTemporal.txt", arr);
 
 
 

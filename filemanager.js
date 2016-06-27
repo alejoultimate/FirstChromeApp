@@ -34,7 +34,7 @@ FileManager.prototype.splitByFileName = function(fullFileName) {
 };
 
 
-FileManager.prototype.writeToLocal = function(fullFileName) {
+FileManager.prototype.writeToLocal = function(fullFileName, arr) {
   // Separar el directorio y el nombre del archivo
   var file = this.splitByFileName(fullFileName);
   window.requestFileSystem(window.PERSISTENT, 1024*1024, function(fs) {
@@ -45,10 +45,6 @@ FileManager.prototype.writeToLocal = function(fullFileName) {
         console.log(fileEntry);
         fileEntry.createWriter(function(fileWriter) {
           console.log(fileWriter);
-          var arr = [];
-          
-          arr[0] = "esto es una prueba grandiosa y me voy a dormir" + String.fromCharCode(10);
-          arr[1] = "MARAVILLOSO" + String.fromCharCode(10);
   
           var blob = new Blob(arr);
   
