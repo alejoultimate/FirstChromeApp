@@ -365,6 +365,15 @@ ProtocolASTM.prototype.isValidRecord = function (data) {
   return validFormat;
 };
 
+
+
+
+var fileManager = new FileManager();
+fileManager.writeToLocal("/Log/LogSerialPortToASTM.txt");
+fileManager.writeToLocal("/tmp/LogTemporal.txt");
+
+
+
 /*
 var protocol = new ProtocolASTM();
 

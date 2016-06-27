@@ -17,5 +17,12 @@
     }
   },
   
-  "permissions": ["serial"]
+  "permissions": [
+                    "serial", 
+                    { "fileSystem": ["write", "retainEntries", "directory"] },
+                    "storage",
+                    "unlimitedStorage",
+                    "syncFileSystem",
+                    "downloads"
+                 ]
 }

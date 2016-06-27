@@ -262,10 +262,10 @@
 /////////////////////////////////////////////////////////////////////////
 
   function nombreModuloApp() {
-    document.querySelector('#saludo').innerText = 'SIRIUS.SerialPort()';
+    document.querySelector('#saludo').innerText = 'SIRIUS.SerialPortToASTM()';
   }
   
-  
+
   /* Permite cargar múltiples funciones de JavaScript en el evento onload */
   function addLoadEvent(func) {
     var oldonload = window.onload;
@@ -281,9 +281,7 @@
     }
   }
   
-  
   addLoadEvent(nombreModuloApp);
 
-  
   init();
 })();
