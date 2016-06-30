@@ -7,17 +7,9 @@ function FieldsASTM () {
 function RecordASTM () {
   this.level = 0;
   this.typeIdentifier = "";
-  var data = "";
   this.fields = [];
-  
-  this.getData = function() {
-    return data;
-  };
-  
-  this.setData = function(value) {
-    data = value;
-  };
 }
+
 
 RecordASTM.prototype.isValidIdentifier = function (id) {
   if (this.typeIdentifier === id)
@@ -40,7 +32,6 @@ RecordASTM.prototype.isValidRecord = function (data, fields) {
 
 RecordASTM.prototype.createRecord = function (data, fields) {
   if (this.isValidRecord(data, fields)) {
-    this.setData(data);
     this.fields = fields;
     return true;
   }
@@ -49,6 +40,7 @@ RecordASTM.prototype.createRecord = function (data, fields) {
 
 // Header ASTM
 function HeaderASTM () {
+  var data = "";
   this.level = 0;
   this.typeIdentifier = "H";
   var items = {
@@ -67,7 +59,7 @@ function HeaderASTM () {
     versionNumber: "",
     dateAndTime: ""
   };
-  this.patients = [];
+  var patients = [];
   this.comments = [];
   this.numberFieldsValid = 14;
   
@@ -109,76 +101,256 @@ function HeaderASTM () {
   this.getSenderID = function() {
     return items.senderID;
   };
- 
+  
+  this.getPatients = function() {
+    return patients;
+  };
+  
+  this.setPatients = function(value) {
+    patients = value;
+  };
+  
+  this.getPatient = function(index) {
+    return patients[index];
+  };
+
+  this.getData = function() {
+      return data;
+  };
+
+  this.setData = function(value) {
+    data = value;
+  };
 }
 
 // inherits From RecordASTM
 HeaderASTM.prototype = new RecordASTM();
 
+// Create Record
+HeaderASTM.prototype.createRecord = function (data, fields) {
+  if (RecordASTM.prototype.createRecord.call(this, data, fields)) {
+    this.setData(data);
+    return true;
+  }
+  return false;
+};
+
+
+
 // Patient ASTM
 function PatientASTM () {
+  var data = "";
   this.level = 1;
   this.typeIdentifier = "P";
-  this.orders = [];
+  var orders = [];
   this.queries = [];
-  this.comments = [];
+  var comments = [];
   this.numberFieldsValid = 35;
+  
+  this.getData = function() {
+      return data;
+  };
+
+  this.setData = function(value) {
+    data = value;
+  };
+  
+  this.getComments = function() {
+    return comments;
+  };
+  
+  this.getComment = function(index) {
+    return comments[index];
+  };
+  
+  this.getOrders = function() {
+    return orders;
+  };
+  
+  this.getOrder = function(index) {
+    return orders[index];
+  };
 }
 
 // inherits From RecordASTM
 PatientASTM.prototype = new RecordASTM();
 
+// Create Record
+PatientASTM.prototype.createRecord = function (data, fields) {
+  if (RecordASTM.prototype.createRecord.call(this, data, fields)) {
+    this.setData(data);
+    return true;
+  }
+  return false;
+};
+
+
 // Order ASTM
 function OrderASTM () {
+  var data = "";
   this.level = 2;
   this.typeIdentifier = "O";
-  this.results = [];
-  this.comments = [];
+  var results = [];
+  var comments = [];
   this.numberFieldsValid = 26;
+
+  this.getData = function() {
+      return data;
+  };
+
+  this.setData = function(value) {
+    data = value;
+  };
+
+  this.getComments = function() {
+    return comments;
+  };
+  
+  this.getComment = function(index) {
+    return comments[index];
+  };
+
+  this.getResults = function() {
+    return results;
+  };
+  
+  this.getResult = function(index) {
+    return results[index];
+  };
 }
 
 // inherits From RecordASTM
 OrderASTM.prototype = new RecordASTM();
 
+// Create Record
+OrderASTM.prototype.createRecord = function (data, fields) {
+  if (RecordASTM.prototype.createRecord.call(this, data, fields)) {
+    this.setData(data);
+    return true;
+  }
+  return false;
+};
+
 // Result ASTM
 function ResultASTM () {
+  var data = "";
   this.level = 3;
   this.typeIdentifier = "R";
-  this.comments = [];
+  var comments = [];
   this.numberFieldsValid = 14;
+  
+  this.getData = function() {
+      return data;
+  };
+
+  this.setData = function(value) {
+    data = value;
+  };
+  
+  this.getComments = function() {
+    return comments;
+  };
+  
+  this.getComment = function(index) {
+    return comments[index];
+  };
 }
 
 // inherits From RecordASTM
 ResultASTM.prototype = new RecordASTM();
 
+// Create Record
+ResultASTM.prototype.createRecord = function (data, fields) {
+  if (RecordASTM.prototype.createRecord.call(this, data, fields)) {
+    this.setData(data);
+    return true;
+  }
+  return false;
+};
+
+
 // Query ASTM
 function QueryASTM () {
+  var data = "";
   this.level = 2;
   this.typeIdentifier = "Q";
   this.numberFieldsValid = 13;
+  
+  this.getData = function() {
+      return data;
+  };
+
+  this.setData = function(value) {
+    data = value;
+  };
 }
 
 // inherits From RecordASTM
 QueryASTM.prototype = new RecordASTM();
 
+// Create Record
+QueryASTM.prototype.createRecord = function (data, fields) {
+  if (RecordASTM.prototype.createRecord.call(this, data, fields)) {
+    this.setData(data);
+    return true;
+  }
+  return false;
+};
+
 // Finalrecord ASTM
 function FinalRecordASTM () {
+  var data = "";
   this.level = 0;
   this.typeIdentifier = "L";
   this.numberFieldsValid = 3;
+  
+  this.getData = function() {
+      return data;
+  };
+
+  this.setData = function(value) {
+    data = value;
+  };
 }
 
 // inherits From RecordASTM
 FinalRecordASTM.prototype = new RecordASTM();
 
+// Create Record
+FinalRecordASTM.prototype.createRecord = function (data, fields) {
+  if (RecordASTM.prototype.createRecord.call(this, data, fields)) {
+    this.setData(data);
+    return true;
+  }
+  return false;
+};
+
 // Comment ASTM
 function CommentASTM () {
+  var data = "";
   this.typeIdentifier = "C";
   this.numberFieldsValid = 5;
+  
+  this.setData = function(value) {
+    data = value;
+  };
+
+  this.getData = function() {
+      return data;
+  };
 }
 
 // inherits From RecordASTM
 CommentASTM.prototype = new RecordASTM();
+
+// Create Record
+CommentASTM.prototype.createRecord = function (data, fields) {
+  if (RecordASTM.prototype.createRecord.call(this, data, fields)) {
+    this.setData(data);
+    return true;
+  }
+  return false;
+};
 
 
 function ProtocolASTM () {
@@ -206,7 +378,7 @@ ProtocolASTM.prototype.createPatient = function (data, fields) {
   patient.createRecord(data, fields);
   if (patient.fields.length > 0) {
     this.currentLevel = patient.level;
-    this.header.patients.push(patient);
+    this.header.getPatients().push(patient);
     return true;
   }
   return false;
@@ -216,10 +388,10 @@ ProtocolASTM.prototype.createPatient = function (data, fields) {
 ProtocolASTM.prototype.createOrder = function (data, fields) {
   var order = new OrderASTM();
   order.createRecord(data, fields);
-  if (order.fields.length > 0) {
+  if ((order.fields.length > 0) && (this.currentLevel >= 1)) {
     this.currentLevel = order.level;
-    currentPositionPatient = this.header.patients.length - 1;
-    this.header.patients[currentPositionPatient].orders.push(order);
+    currentPositionPatient = this.header.getPatients().length - 1;
+    this.header.getPatient(currentPositionPatient).getOrders().push(order);
     return true;
   }
   return false;
@@ -231,9 +403,9 @@ ProtocolASTM.prototype.createResult = function (data, fields) {
   result.createRecord(data, fields);
   if (result.fields.length > 0) {
     this.currentLevel = result.level;
-    currentPositionPatient = this.header.patients.length - 1;
-    currentPositionOrder = this.header.patients[currentPositionPatient].orders.length - 1;
-    this.header.patients[currentPositionPatient].orders[currentPositionOrder].results.push(result);
+    currentPositionPatient = this.header.getPatients().length - 1;
+    currentPositionOrder = this.header.getPatient(currentPositionPatient).getOrders().length - 1;
+    this.header.getPatient(currentPositionPatient).getOrder(currentPositionOrder).getResults().push(result);
     return true;
   }
   return false;
@@ -246,7 +418,7 @@ ProtocolASTM.prototype.createQuery = function (data, fields) {
   query.createRecord(data, fields);
   if (query.fields.length > 0) {
     this.currentLevel = order.level;
-    currentPositionPatient = this.header.patients.length - 1;
+    currentPositionPatient = this.header.getPatients().length - 1;
     this.header.patients[currentPositionPatient].queries.push(query);
     return true;
   }
@@ -263,19 +435,19 @@ ProtocolASTM.prototype.createComments = function (data, fields) {
       this.header.comments.push(comment);
       break;
     case 1:
-      currentPositionPatient = this.header.patients.length - 1;
-      this.header.patients[currentPositionPatient].comments.push(comment);
+      currentPositionPatient = this.header.getPatients().length - 1;
+      this.header.getPatient(currentPositionPatient).getComments().push(comment);
       break;
     case 2:
-      currentPositionPatient = this.header.patients.length - 1;
-      currentPositionOrder = this.header.patients[currentPositionPatient].orders.length - 1;
-      this.header.patients[currentPositionPatient].orders[currentPositionOrder].comments.push(comment);
+      currentPositionPatient = this.header.getPatients().length - 1;
+      currentPositionOrder = this.header.getPatient(currentPositionPatient).getOrders().length - 1;
+      this.header.getPatient(currentPositionPatient).getOrder(currentPositionOrder).getComments().push(comment);
       break;
     case 3:
-      currentPositionPatient = this.header.patients.length - 1;
-      currentPositionOrder = this.header.patients[currentPositionPatient].orders.length - 1;
-      currentPositionResult = this.header.patients[currentPositionPatient].orders[currentPositionOrder].results.length - 1;
-      this.header.patients[currentPositionPatient].orders[currentPositionOrder].results[currentPositionResult].comments.push(comment);
+      currentPositionPatient = this.header.getPatients().length - 1;
+      currentPositionOrder = this.header.getPatient(currentPositionPatient).getOrders().length - 1;
+      currentPositionResult = this.header.getPatient(currentPositionPatient).getOrder(currentPositionOrder).getResults().length - 1;
+      this.header.getPatient(currentPositionPatient).getOrder(currentPositionOrder).getResult(currentPositionResult).getComments().push(comment);
       break;
     }
     return true;
@@ -375,8 +547,28 @@ ProtocolASTM.prototype.isValidRecord = function (data) {
 
 ProtocolASTM.prototype.getArrayWithFullPatientProtocol = function () {
   var arrayProtocol = [];
+  var results;
+  var posR;
+  var currentResult;
+  var commentsR;
+  var posCommentR;
   
   arrayProtocol[0] = this.header.getData();
+  arrayProtocol[1] = this.header.getPatient(0).getData();
+  arrayProtocol[2] = this.header.getPatient(0).getComment(0).getData();
+  arrayProtocol[3] = this.header.getPatient(0).getComment(1).getData();
+  arrayProtocol[4] = this.header.getPatient(0).getOrder(0).getData();
+  arrayProtocol[5] = this.header.getPatient(0).getOrder(0).getComment(0).getData();
+  arrayProtocol[6] = this.header.getPatient(0).getOrder(0).getComment(1).getData();
+  results = this.header.getPatient(0).getOrder(0).getResults();
+  for (posR = 0; posR < results.length; posR++) {
+    currentResult = this.header.getPatient(0).getOrder(0).getResult(posR);
+    arrayProtocol.push(currentResult.getData());
+    commentsR = currentResult.getComments();
+    for (posCommentR = 0; posCommentR < commentsR.length; posCommentR++) {
+      arrayProtocol.push(currentResult.getComment(posCommentR).getData());
+    }
+  }
 
   //                   this.header.patients
   
@@ -386,19 +578,6 @@ ProtocolASTM.prototype.getArrayWithFullPatientProtocol = function () {
 /*
 var protocol = new ProtocolASTM();
 
-protocol.readInputData("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825");
-protocol.readInputData("P|1|A1E18155MHE|||||||||||||||||||||20160405102825||||||||||");
-protocol.readInputData("C|1|L|COMENTARIO DEL PACIENTE 1|");
-protocol.readInputData("C|2|L|COMENTARIO DEL PACIENTE 2|");
-protocol.readInputData("O|1|A1E18155MHE||ALL|R|20160405082748|20160405082748||||X||||1||||||||||F");
-protocol.readInputData("C|1|L|COMENTARIO DE LA ORDEN 1|");
-protocol.readInputData("C|2|L|COMENTARIO DE LA ORDEN 2 |");
-protocol.readInputData("R|1|^^^Hct^^^^323.1|47|%||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("C|1|L|COMENTARIO DEL RESULTADO 1.1|");
-protocol.readInputData("C|2|L|COMENTARIO DEL RESULTADO 1.2|");
-protocol.readInputData("R|2|^^^Na+^^^^323.1|135|mmol/L||L||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("C|1|L|COMENTARIO DEL RESULTADO 2.1|");
-protocol.readInputData("C|2|L|COMENTARIO DEL RESULTADO 2.2|");
 protocol.readInputData("R|3|^^^K+^^^^323.1|3.2|mmol/L||L||F||^dinamica||20160405082748|323.1");
 protocol.readInputData("R|4|^^^Ca++^^^^323.1|1.04|mmol/L||L||F||^dinamica||20160405082748|323.1");
 protocol.readInputData("R|5|^^^pH^^^^323.1|7.467|||H||F||^dinamica||20160405082748|323.1");

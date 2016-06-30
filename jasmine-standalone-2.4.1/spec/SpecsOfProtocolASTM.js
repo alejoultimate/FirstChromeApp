@@ -75,12 +75,42 @@ describe( "ProtocolASTM", function() {
     var arrayProtocol = [];
     var readStatus = false;
 
-    // Leer la Data modificada
-    readStatus = protocolASTM.readInputData("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825");
+    // Leer la Data
+    readStatus =  protocolASTM.readInputData("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825")
+                  && protocolASTM.readInputData("P|1|A1E18155MHE|||||||||||||||||||||20160405102825|||||||||||")
+                  && protocolASTM.readInputData("C|1|L|COMENTARIO DEL PACIENTE 1|")
+                  && protocolASTM.readInputData("C|2|L|COMENTARIO DEL PACIENTE 2|")
+                  && protocolASTM.readInputData("O|1|A1E18155MHE||ALL|R|20160405082748|20160405082748||||X||||1||||||||||F")
+                  && protocolASTM.readInputData("C|1|L|COMENTARIO DE LA ORDEN 1|")
+                  && protocolASTM.readInputData("C|2|L|COMENTARIO DE LA ORDEN 2|")
+                  && protocolASTM.readInputData("R|1|^^^Hct^^^^323.1|47|%||N||F||^dinamica||20160405082748|323.1")
+                  && protocolASTM.readInputData("C|1|L|COMENTARIO DEL RESULTADO 1.1|")
+                  && protocolASTM.readInputData("C|2|L|COMENTARIO DEL RESULTADO 1.2|")
+                  && protocolASTM.readInputData("R|2|^^^Na+^^^^323.1|135|mmol/L||L||F||^dinamica||20160405082748|323.1")
+                  && protocolASTM.readInputData("C|1|L|COMENTARIO DEL RESULTADO 2.1|")
+                  && protocolASTM.readInputData("C|2|L|COMENTARIO DEL RESULTADO 2.2|");
+                  
+                  
+                  
+    debugger;              
+    
+    // Obtener un array con el protocolo completo del paciente
     if(readStatus)
       arrayProtocol = protocolASTM.getArrayWithFullPatientProtocol();
     
-    expect(arrayProtocol[0]).toContain("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825");
+    expect(arrayProtocol[0]).toEqual("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825");
+    expect(arrayProtocol[1]).toEqual("P|1|A1E18155MHE|||||||||||||||||||||20160405102825|||||||||||");
+    expect(arrayProtocol[2]).toEqual("C|1|L|COMENTARIO DEL PACIENTE 1|");
+    expect(arrayProtocol[3]).toEqual("C|2|L|COMENTARIO DEL PACIENTE 2|");
+    expect(arrayProtocol[4]).toEqual("O|1|A1E18155MHE||ALL|R|20160405082748|20160405082748||||X||||1||||||||||F");
+    expect(arrayProtocol[5]).toEqual("C|1|L|COMENTARIO DE LA ORDEN 1|");
+    expect(arrayProtocol[6]).toEqual("C|2|L|COMENTARIO DE LA ORDEN 2|");
+    expect(arrayProtocol[7]).toEqual("R|1|^^^Hct^^^^323.1|47|%||N||F||^dinamica||20160405082748|323.1");
+    expect(arrayProtocol[8]).toEqual("C|1|L|COMENTARIO DEL RESULTADO 1.1|");
+    expect(arrayProtocol[9]).toEqual("C|2|L|COMENTARIO DEL RESULTADO 1.2|");
+    expect(arrayProtocol[10]).toEqual("R|2|^^^Na+^^^^323.1|135|mmol/L||L||F||^dinamica||20160405082748|323.1");
+    expect(arrayProtocol[11]).toEqual("C|1|L|COMENTARIO DEL RESULTADO 2.1|");
+    expect(arrayProtocol[12]).toEqual("C|2|L|COMENTARIO DEL RESULTADO 2.2|");
   });
 
 });
