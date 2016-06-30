@@ -71,5 +71,16 @@ describe( "ProtocolASTM", function() {
     expect(recordHeaderModified).toEqual("H|\\^&|||" + header.getSenderID() + "|||||||||");
   });
 
+  it( "Obtener el protocolo completo del Paciente", function() {
+    var arrayProtocol = [];
+    var readStatus = false;
+
+    // Leer la Data modificada
+    readStatus = protocolASTM.readInputData("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825");
+    if(readStatus)
+      arrayProtocol = protocolASTM.getArrayWithFullPatientProtocol();
+    
+    expect(arrayProtocol[0]).toContain("H|\\^&|||EPOC^Blood Analysis^EDM^Data Manager|||||||P||201645102825");
+  });
 
 });

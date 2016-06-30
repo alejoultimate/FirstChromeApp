@@ -7,8 +7,16 @@ function FieldsASTM () {
 function RecordASTM () {
   this.level = 0;
   this.typeIdentifier = "";
-  this.data = "";
+  var data = "";
   this.fields = [];
+  
+  this.getData = function() {
+    return data;
+  };
+  
+  this.setData = function(value) {
+    data = value;
+  };
 }
 
 RecordASTM.prototype.isValidIdentifier = function (id) {
@@ -32,7 +40,7 @@ RecordASTM.prototype.isValidRecord = function (data, fields) {
 
 RecordASTM.prototype.createRecord = function (data, fields) {
   if (this.isValidRecord(data, fields)) {
-    this.data = data;
+    this.setData(data);
     this.fields = fields;
     return true;
   }
@@ -101,7 +109,7 @@ function HeaderASTM () {
   this.getSenderID = function() {
     return items.senderID;
   };
-  
+ 
 }
 
 // inherits From RecordASTM
@@ -365,18 +373,15 @@ ProtocolASTM.prototype.isValidRecord = function (data) {
   return validFormat;
 };
 
+ProtocolASTM.prototype.getArrayWithFullPatientProtocol = function () {
+  var arrayProtocol = [];
+  
+  arrayProtocol[0] = this.header.getData();
 
-
-
-var fileManager = new FileManager();
-var arr = [];
-
-arr[0] = "esto es una prueba grandiosa y me voy a dormir" + String.fromCharCode(10);
-arr[1] = "MARAVILLOSO" + String.fromCharCode(10);
-fileManager.writeToLocal("/Log/LogSerialPortToASTM.txt", arr);
-fileManager.writeToLocal("/tmp/LogTemporal.txt", arr);
-
-
+  //                   this.header.patients
+  
+  return arrayProtocol;
+};
 
 /*
 var protocol = new ProtocolASTM();

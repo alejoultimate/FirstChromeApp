@@ -187,6 +187,16 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
 };
 
 
-// Crear dinamicamente archivos JavaScript
+DriverForAnalyzer.prototype.saveAsText = function () {
+  var fileManager = new FileManager();
+  var arr = [];
+  
+  arr[0] = "esto es una prueba grandiosa y me voy a dormir" + String.fromCharCode(10);
+  arr[1] = "MARAVILLOSO" + String.fromCharCode(10);
+  fileManager.writeToLocal("/Log/LogSerialPortToASTM.txt", arr);
+};
+
+
+// Cargar dinamicamente archivos JavaScript
 var conf = new ConfigurationOfAnalyzer();
 conf.loadListJSFile();
