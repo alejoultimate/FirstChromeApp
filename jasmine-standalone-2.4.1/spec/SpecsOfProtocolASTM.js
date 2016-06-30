@@ -92,7 +92,7 @@ describe( "ProtocolASTM", function() {
                   
                   
                   
-    debugger;              
+    //debugger;              
     
     // Obtener un array con el protocolo completo del paciente
     if(readStatus)

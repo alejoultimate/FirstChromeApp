@@ -547,31 +547,58 @@ ProtocolASTM.prototype.isValidRecord = function (data) {
 
 ProtocolASTM.prototype.getArrayWithFullPatientProtocol = function () {
   var arrayProtocol = [];
+  
+  var currentHeader;
+  
+  var patients;
+  var posP;
+  var currentPatient;
+  var commentsP;
+  var posCommentP;
+  
+  var orders;
+  var posO;
+  var currentOrder;
+  var commentsO;
+  var posCommentO;
+  
   var results;
   var posR;
   var currentResult;
   var commentsR;
   var posCommentR;
   
-  arrayProtocol[0] = this.header.getData();
-  arrayProtocol[1] = this.header.getPatient(0).getData();
-  arrayProtocol[2] = this.header.getPatient(0).getComment(0).getData();
-  arrayProtocol[3] = this.header.getPatient(0).getComment(1).getData();
-  arrayProtocol[4] = this.header.getPatient(0).getOrder(0).getData();
-  arrayProtocol[5] = this.header.getPatient(0).getOrder(0).getComment(0).getData();
-  arrayProtocol[6] = this.header.getPatient(0).getOrder(0).getComment(1).getData();
-  results = this.header.getPatient(0).getOrder(0).getResults();
-  for (posR = 0; posR < results.length; posR++) {
-    currentResult = this.header.getPatient(0).getOrder(0).getResult(posR);
-    arrayProtocol.push(currentResult.getData());
-    commentsR = currentResult.getComments();
-    for (posCommentR = 0; posCommentR < commentsR.length; posCommentR++) {
-      arrayProtocol.push(currentResult.getComment(posCommentR).getData());
+  
+  currentHeader = this.header;
+  arrayProtocol.push(currentHeader.getData());
+  patients = currentHeader.getPatients();
+  for (posP = 0; posP < patients.length; posP++) {
+    currentPatient = this.header.getPatient(0);
+    arrayProtocol.push(currentPatient.getData());
+    commentsP = currentPatient.getComments();
+    for (posCommentP = 0; posCommentP < commentsP.length; posCommentP++) {
+     arrayProtocol.push(currentPatient.getComment(posCommentP).getData()); 
+    }
+    orders = currentPatient.getOrders();
+    for (posO = 0; posO < orders.length; posO++) {
+      currentOrder = currentPatient.getOrder(posO);
+      arrayProtocol.push(currentOrder.getData());
+      commentsO = currentOrder.getComments();
+      for (posCommentO = 0; posCommentO < commentsO.length; posCommentO++) {
+        arrayProtocol.push(currentOrder.getComment(posCommentO).getData());
+      }
+      results = currentOrder.getResults();
+      for (posR = 0; posR < results.length; posR++) {
+        currentResult = currentOrder.getResult(posR);
+        arrayProtocol.push(currentResult.getData());
+        commentsR = currentResult.getComments();
+        for (posCommentR = 0; posCommentR < commentsR.length; posCommentR++) {
+          arrayProtocol.push(currentResult.getComment(posCommentR).getData());
+        }
+      }
     }
   }
 
-  //                   this.header.patients
-  
   return arrayProtocol;
 };
 
