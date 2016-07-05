@@ -67,6 +67,9 @@ DriverForTesting.prototype.driverResponse = function () {
   console.log(this.getConfiguration());
   // Imprimir en pantalla el protocolo ASTM
   console.log(this.getProtocolASTM());
+  
+  this.saveProtocolAsText();
+  
   // Respuesta automática
   return "Respuesta automatica : " + this.getStringReceived();
 };

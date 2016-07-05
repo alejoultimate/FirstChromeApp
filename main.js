@@ -207,7 +207,7 @@
         sendSerial(index, dataOutput);
     }
     catch (error) {
-      logError(index, "Ocurrió un error al recibidos los datos: " + error.message);
+      logError(index, "Ocurrió un error al recibir los datos: " + error.message);
     }
   };
   

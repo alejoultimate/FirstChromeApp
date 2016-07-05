@@ -187,13 +187,19 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
 };
 
 
-DriverForAnalyzer.prototype.saveAsText = function () {
+DriverForAnalyzer.prototype.saveProtocolAsText = function () {
+  // Definir variables locales
   var fileManager = new FileManager();
-  var arr = [];
+  var arrayProtocol = [];
+  var position;
   
-  arr[0] = "esto es una prueba grandiosa y me voy a dormir" + String.fromCharCode(10);
-  arr[1] = "MARAVILLOSO" + String.fromCharCode(10);
-  fileManager.writeToLocal("/Log/LogSerialPortToASTM.txt", arr);
+  // Concatenar un caracter de fin de línea 
+  arrayProtocol = this.getProtocolASTM().getArrayWithFullPatientProtocol();
+  for ( position = 0; position < arrayProtocol.length; position++ ) {
+    arrayProtocol[position] += String.fromCharCode(10);
+  }
+  // Guardar el protocolo en el file system
+  fileManager.writeToLocal("/Log/LogSerialPortToASTM.txt", arrayProtocol);
 };
 
 

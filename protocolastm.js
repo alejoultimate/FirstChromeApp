@@ -547,50 +547,54 @@ ProtocolASTM.prototype.isValidRecord = function (data) {
 
 ProtocolASTM.prototype.getArrayWithFullPatientProtocol = function () {
   var arrayProtocol = [];
-  
   var currentHeader;
-  
   var patients;
   var posP;
   var currentPatient;
   var commentsP;
   var posCommentP;
-  
   var orders;
   var posO;
   var currentOrder;
   var commentsO;
   var posCommentO;
-  
   var results;
   var posR;
   var currentResult;
   var commentsR;
   var posCommentR;
+  var currentFinalRecord;
   
-  
+  // Header
   currentHeader = this.header;
-  arrayProtocol.push(currentHeader.getData());
+  if (currentHeader.getData().length > 0 )
+    arrayProtocol.push(currentHeader.getData());
   patients = currentHeader.getPatients();
   for (posP = 0; posP < patients.length; posP++) {
+    // Patient
     currentPatient = this.header.getPatient(0);
     arrayProtocol.push(currentPatient.getData());
+    // Comments
     commentsP = currentPatient.getComments();
     for (posCommentP = 0; posCommentP < commentsP.length; posCommentP++) {
      arrayProtocol.push(currentPatient.getComment(posCommentP).getData()); 
     }
     orders = currentPatient.getOrders();
     for (posO = 0; posO < orders.length; posO++) {
+      // Order
       currentOrder = currentPatient.getOrder(posO);
       arrayProtocol.push(currentOrder.getData());
+      // Comments
       commentsO = currentOrder.getComments();
       for (posCommentO = 0; posCommentO < commentsO.length; posCommentO++) {
         arrayProtocol.push(currentOrder.getComment(posCommentO).getData());
       }
       results = currentOrder.getResults();
       for (posR = 0; posR < results.length; posR++) {
+        // Result
         currentResult = currentOrder.getResult(posR);
         arrayProtocol.push(currentResult.getData());
+        // Comments
         commentsR = currentResult.getComments();
         for (posCommentR = 0; posCommentR < commentsR.length; posCommentR++) {
           arrayProtocol.push(currentResult.getComment(posCommentR).getData());
@@ -598,54 +602,10 @@ ProtocolASTM.prototype.getArrayWithFullPatientProtocol = function () {
       }
     }
   }
+  // Final record
+  currentFinalRecord = this.finalrecord;
+  if (currentFinalRecord.getData().length > 0 )
+    arrayProtocol.push(currentFinalRecord.getData());
 
   return arrayProtocol;
 };
-
-/*
-var protocol = new ProtocolASTM();
-
-protocol.readInputData("R|3|^^^K+^^^^323.1|3.2|mmol/L||L||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|4|^^^Ca++^^^^323.1|1.04|mmol/L||L||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|5|^^^pH^^^^323.1|7.467|||H||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|6|^^^pCO2^^^^323.1|33.8|mmHg||L||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|7|^^^pO2^^^^323.1|39.0|mmHg||L||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|8|^^^Glu^^^^323.1|116|mg/dL||H||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|9|^^^Lact^^^^323.1|2.32|mmol/L||H||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|10|^^^cHgb^^^^323.1|16.0|g/dL||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|11|^^^HCO3-act^^^^323.1|24.4|mmol/L||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|12|^^^cTCO2^^^^323.1|25.4|mmol/L||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|13|^^^BE(ecf)^^^^323.1|0.7|mmol/L||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|14|^^^BE(b)^^^^323.1|1.3|mmol/L||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|15|^^^O2SAT^^^^323.1|77.6|%||L||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|16|^^^Test duration^^^^323.1|239.6|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|17|^^^Department name^^^^323.1|Default|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|18|^^^Sample type^^^^323.1|Unspecified|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|19|^^^Hemodilution^^^^323.1|No|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|20|^^^ReaderMaintenanceRequired^^^^323.1|No|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|21|^^^Bubble width^^^^323.1|0.65|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|22|^^^Ambient Temperature^^^^323.1|21.6|C||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|23|^^^Ambient Pressure^^^^323.1|643.1|mmHg||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|24|^^^Patient Id entry method^^^^323.1|2|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|25|^^^Patient Id lookup code^^^^323.1|6|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|26|^^^eQC time^^^^323.1|05-Apr-16 08:24:19|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|27|^^^eVAD version^^^^323.1|NotAvailable|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|28|^^^EDM Test status^^^^323.1|Success|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|29|^^^Criticals present^^^^323.1|No|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|30|^^^EnforceCriticalHandling^^^^323.1|Yes|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|31|^^^Host mode^^^^323.1|0|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|32|^^^QCScheduleState^^^^323.1|0|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|33|^^^CVScheduleState^^^^323.1|0|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|34|^^^TQAScheduleState^^^^323.1|0|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|35|^^^QAScheduleState^^^^323.1|0|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|36|^^^Card Lot^^^^323.1|07-15313-30|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|37|^^^Card Expiration Date^^^^323.1|20160425|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|38|^^^HostSerNum^^^^323.1|15065521400740|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|39|^^^Host Alias^^^^323.1|15065521400740|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|40|^^^ReaderSerNum^^^^323.1|11716|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("R|41|^^^Reader Alias^^^^323.1|Rdr11716|||N||F||^dinamica||20160405082748|323.1");
-protocol.readInputData("L|1|N");
-
-
-console.log(protocol);
-*/
