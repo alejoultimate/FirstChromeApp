@@ -6,6 +6,10 @@ function DriverForTesting (newConfiguration) {
 DriverForTesting.prototype = new DriverForAnalyzer(null);
 
 
+DriverForTesting.prototype.whenConvertTheHeader = function (data) {
+  return (data.indexOf("Header") != -1);
+};
+
 // Convertir la Data en un registro Header ASTM
 DriverForTesting.prototype.convertDataToHeaderASTM = function (data) {
   // Definir  variables locales
@@ -26,40 +30,6 @@ DriverForTesting.prototype.convertDataToHeaderASTM = function (data) {
   return dataModified;
 };
 
-// Para cambiar los datos
-DriverForTesting.prototype.toChangeData = function (data) {
-  // Definir  variables locales
-  var dataModified = "";
-
-  switch (true) {
-    case (data.indexOf("Header") != -1):
-      dataModified = this.convertDataToHeaderASTM(data);
-      break;
-    case (data.indexOf("Patient") != -1):
-      console.log("Patient");
-      break;
-    case (data.indexOf("Order") != -1):
-      console.log("Order");
-      break;
-    case (data.indexOf("Result") != -1):
-      console.log("Result");
-      break;
-    case (data.indexOf("Query") != -1):
-      console.log("Query");
-      break;
-    case (data.indexOf("Comment") != -1):
-      console.log("Comment");
-      break;
-    case (data.indexOf("FinalRecord") != -1):
-      console.log("FinalRecord");
-      break;
-    default:
-      console.log("Comment default");
-  }
-
-  // Retornar la Data
-  return dataModified;
-};
 
 // Implementar driverResponse
 DriverForTesting.prototype.driverResponse = function () {

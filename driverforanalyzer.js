@@ -137,19 +137,56 @@ DriverForAnalyzer.prototype.driverResponse = function () {
 };
 
 
+DriverForAnalyzer.prototype.whenConvertTheHeader = function (data) {
+  // < Se debe heredar este metodo y retornar true, para covertir la data
+  // en un mensaje ASTM, cuando se cumpla una condición >
+  return false;
+};
+
 DriverForAnalyzer.prototype.convertDataToHeaderASTM = function (data) {
-  // < Se debe heredar este metodo y modificar la data >
+  // < Se debe heredar este metodo y convertir la data >
   return "";
 };
 
 DriverForAnalyzer.prototype.convertDataToPatientASTM = function (data) {
-  // < Se debe heredar este metodo y modificar la data >
+  // < Se debe heredar este metodo y convertir la data >
   return "";
 };
 
+
+// Se describe cuando se deben cambiar los datos
 DriverForAnalyzer.prototype.toChangeData = function (data) {
-  // < Se debe heredar este metodo y cambiar la data en un protocolo ASTM >
-  return "";
+  // Definir  variables locales
+  var dataModified = "";
+
+  switch (true) {
+    case (this.whenConvertTheHeader(data)):
+      dataModified = this.convertDataToHeaderASTM(data);
+      break;
+    case (data.indexOf("Patient") != -1):
+      console.log("Patient");
+      break;
+    case (data.indexOf("Order") != -1):
+      console.log("Order");
+      break;
+    case (data.indexOf("Result") != -1):
+      console.log("Result");
+      break;
+    case (data.indexOf("Query") != -1):
+      console.log("Query");
+      break;
+    case (data.indexOf("Comment") != -1):
+      console.log("Comment");
+      break;
+    case (data.indexOf("FinalRecord") != -1):
+      console.log("FinalRecord");
+      break;
+    default:
+      console.log("Comment default");
+  }
+
+  // Retornar la Data
+  return dataModified;
 };
 
 
