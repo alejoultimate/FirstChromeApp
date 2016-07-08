@@ -18,7 +18,7 @@ ConfigurationOfAnalyzer.prototype.loadConfiguration = function (callback) {
             callback(xobj.responseText);
           }
   };
-  xobj.send(null);  
+  xobj.send(null);
 };
 
 ConfigurationOfAnalyzer.prototype.loadjscssfile = function (filename, filetype) {
@@ -35,7 +35,7 @@ ConfigurationOfAnalyzer.prototype.loadjscssfile = function (filename, filetype) 
         fileref.setAttribute("type", "text/css");
         fileref.setAttribute("href", filename);
     }
-    if (typeof fileref!="undefined") 
+    if (typeof fileref!="undefined")
       document.body.appendChild(fileref);
 };
 
@@ -137,7 +137,7 @@ DriverForAnalyzer.prototype.driverResponse = function () {
 };
 
 
-DriverForAnalyzer.prototype.whenConvertTheHeader = function (data) {
+DriverForAnalyzer.prototype.whenIsHeader = function (data) {
   // < Se debe heredar este metodo y retornar true, para covertir la data
   // en un mensaje ASTM, cuando se cumpla una condición >
   return false;
@@ -148,7 +148,24 @@ DriverForAnalyzer.prototype.convertDataToHeaderASTM = function (data) {
   return "";
 };
 
+DriverForAnalyzer.prototype.whenIsPatient = function (data) {
+  // < Se debe heredar este metodo y retornar true, para covertir la data
+  // en un mensaje ASTM, cuando se cumpla una condición >
+  return false;
+};
+
 DriverForAnalyzer.prototype.convertDataToPatientASTM = function (data) {
+  // < Se debe heredar este metodo y convertir la data >
+  return "";
+};
+
+DriverForAnalyzer.prototype.whenIsOrder = function (data) {
+  // < Se debe heredar este metodo y retornar true, para covertir la data
+  // en un mensaje ASTM, cuando se cumpla una condición >
+  return "";
+};
+
+DriverForAnalyzer.prototype.convertDataToOrderASTM = function (data) {
   // < Se debe heredar este metodo y convertir la data >
   return "";
 };
@@ -160,14 +177,14 @@ DriverForAnalyzer.prototype.toChangeData = function (data) {
   var dataModified = "";
 
   switch (true) {
-    case (this.whenConvertTheHeader(data)):
+    case (this.whenIsHeader(data)):
       dataModified = this.convertDataToHeaderASTM(data);
       break;
-    case (data.indexOf("Patient") != -1):
-      console.log("Patient");
+    case (this.whenIsPatient(data)):
+      dataModified = this.convertDataToPatientASTM(data);
       break;
-    case (data.indexOf("Order") != -1):
-      console.log("Order");
+    case (this.convertDataToOrderASTM(data)):
+      dataModified = this.convertDataToOrderASTM(data);
       break;
     case (data.indexOf("Result") != -1):
       console.log("Result");
@@ -207,7 +224,7 @@ DriverForAnalyzer.prototype.responseDataEntry = function (readStatus) {
 
 DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
   // Definir variables locales
-  var recordASTM = "";
+  var dataModified = "";
   var readStatus = false;
   // Validar si el dato es un formato ASTM válido
   if ( this.getProtocolASTM().isValidRecord(data) ) {
@@ -215,9 +232,12 @@ DriverForAnalyzer.prototype.readingAndResponseDataEntry = function (data) {
     readStatus = this.readingDataEntry(data);
   } else {
     // Cambiar la Data
-    recordASTM = this.toChangeData(data);
+    dataModified = this.toChangeData(data);
     // Validar si el registro ASTM tiene un formato válido
-    readStatus = this.getProtocolASTM().isValidRecord(recordASTM);
+    if ( this.getProtocolASTM().isValidRecord(dataModified) ) {
+      // Leer la Data modificada
+      readStatus = this.readingDataEntry(dataModified);
+    }
   }
   // Respuesta del Driver
   return this.responseDataEntry(readStatus);
@@ -230,7 +250,7 @@ DriverForAnalyzer.prototype.saveProtocolAsText = function () {
   var arrayProtocol = [];
   var position;
   
-  // Concatenar un caracter de fin de línea 
+  // Concatenar un caracter de fin de línea
   arrayProtocol = this.getProtocolASTM().getArrayWithFullPatientProtocol();
   for ( position = 0; position < arrayProtocol.length; position++ ) {
     arrayProtocol[position] += String.fromCharCode(10);

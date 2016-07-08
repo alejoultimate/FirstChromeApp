@@ -142,6 +142,43 @@ function PatientASTM () {
   var data = "";
   this.level = 1;
   this.typeIdentifier = "P";
+  var items = {
+    recordTypeID: "P",
+    sequenceNumber: "",
+    practicePatientID: "",
+    labPatientID: "",
+    patientIDNo_3: "",
+    patientName: "",
+    motherIsMaidenName: "",
+    birthdate: "",
+    patientSex: "",
+    patientRaceEthnicOrigin: "",
+    patientAddress: "",
+    reservedField: "",
+    patientTelephoneNumber: "",
+    attendingPhysicianID: "",
+    specialField1: "",
+    specialField2: "",
+    patientHeight: "",
+    patientWeight: "",
+    diagnose: "",
+    patientActiveMedications: "",
+    patientIsDiet: "",
+    praticeFieldNo_1: "",
+    practiceFieldNo_2: "",
+    registeredDateandTime: "",
+    admissionStatus: "",
+    location: "",
+    natureOfAlternDiagnCodeAndClassif: "",
+    AlternDiagnCodeandClassif: "",
+    patientReligion: "",
+    maritalStatus: "",
+    isolationStatus: "",
+    language: "",
+    area: "",
+    hospitalInstitution: "",
+    dosageCategory: ""
+  };
   var orders = [];
   this.queries = [];
   var comments = [];
@@ -170,6 +207,62 @@ function PatientASTM () {
   this.getOrder = function(index) {
     return orders[index];
   };
+  
+  this.setSampleID = function(value) {
+    items.practicePatientID = value;
+  };
+  
+  this.getItems = function() {
+    return items;
+  };
+
+  this.getRecordModified = function(item) {
+    var recordModified =  [ item.recordTypeID,
+                            item.sequenceNumber,
+                            item.practicePatientID,
+                            item.labPatientID,
+                            item.patientIDNo_3,
+                            item.patientName,
+                            item.motherIsMaidenName,
+                            item.birthdate,
+                            item.patientSex,
+                            item.patientRaceEthnicOrigin,
+                            item.patientAddress,
+                            item.reservedField,
+                            item.patientTelephoneNumber,
+                            item.attendingPhysicianID,
+                            item.specialField1,
+                            item.specialField2,
+                            item.patientHeight,
+                            item.patientWeight,
+                            item.diagnose,
+                            item.patientActiveMedications,
+                            item.patientIsDiet,
+                            item.praticeFieldNo_1,
+                            item.practiceFieldNo_2,
+                            item.registeredDateandTime,
+                            item.admissionStatus,
+                            item.location,
+                            item.natureOfAlternDiagnCodeAndClassif,
+                            item.AlternDiagnCodeandClassif,
+                            item.patientReligion,
+                            item.maritalStatus,
+                            item.isolationStatus,
+                            item.language,
+                            item.area,
+                            item.hospitalInstitution,
+                            item.dosageCategory
+                          ].join("|");
+    return recordModified;
+  };
+  
+  this.getDataModified = function() {
+    var arrayItems = [];
+    arrayItems[0] = this.getItems();
+    var recordStringModified = arrayItems.map(this.getRecordModified);
+    data = recordStringModified[0];
+    return data;
+  };
 }
 
 // inherits From RecordASTM
@@ -190,6 +283,33 @@ function OrderASTM () {
   var data = "";
   this.level = 2;
   this.typeIdentifier = "O";
+  var items = [ recordTypeID = "O",
+                sequenceNumber = "",
+                sampleID = "",
+                position = "",
+                universalTestID = "",
+                priority = "",
+                requestedDateAndTime = "",
+                specimenCollectionDateAndTime = "",
+                collectionEndTime = "",
+                collectionVolume = "",
+                collectorID = "",
+                actionCode = "",
+                dangerCode = "",
+                relevantClinicalInformation = "",
+                dateTimeSpecimenReceived = "",
+                specimenDescriptor = "",
+                OrderingPhysician = "",
+                physicianIsTelephoneNumber = "",
+                userLoginSignature = "",
+                UsersFieldNo_2 = "",
+                specimenQuality = "",
+                rerunFlag = "",
+                dateTimeResults = "",
+                instrumentChargeToPCSystem = "",
+                instrumentCode = "",
+                reportType = ""
+              ];
   var results = [];
   var comments = [];
   this.numberFieldsValid = 26;
@@ -216,6 +336,53 @@ function OrderASTM () {
   
   this.getResult = function(index) {
     return results[index];
+  };
+  
+  this.setSampleID = function(value) {
+    items.sampleID = value;
+  };
+  
+  this.getItems = function() {
+    return items;
+  };
+
+  this.getRecordModified = function(item) {
+    var recordModified =  [ item.recordTypeID,
+                            item.sequenceNumber,
+                            item.sampleID,
+                            item.position,
+                            item.universalTestID,
+                            item.priority,
+                            item.requestedDateAndTime,
+                            item.specimenCollectionDateAndTime,
+                            item.collectionEndTime,
+                            item.collectionVolume,
+                            item.collectorID,
+                            item.actionCode,
+                            item.dangerCode,
+                            item.relevantClinicalInformation,
+                            item.dateTimeSpecimenReceived,
+                            item.specimenDescriptor,
+                            item.OrderingPhysician,
+                            item.physicianIsTelephoneNumber,
+                            item.userLoginSignature,
+                            item.UsersFieldNo_2,
+                            item.specimenQuality,
+                            item.rerunFlag,
+                            item.dateTimeResults,
+                            item.instrumentChargeToPCSystem,
+                            item.instrumentCode,
+                            item.reportType
+                          ].join("|");
+    return recordModified;
+  };
+  
+  this.getDataModified = function() {
+    var arrayItems = [];
+    arrayItems[0] = this.getItems();
+    var recordStringModified = arrayItems.map(this.getRecordModified);
+    data = recordStringModified[0];
+    return data;
   };
 }
 
@@ -577,7 +744,7 @@ ProtocolASTM.prototype.getArrayWithFullPatientProtocol = function () {
     // Comments
     commentsP = currentPatient.getComments();
     for (posCommentP = 0; posCommentP < commentsP.length; posCommentP++) {
-     arrayProtocol.push(currentPatient.getComment(posCommentP).getData()); 
+     arrayProtocol.push(currentPatient.getComment(posCommentP).getData());
     }
     orders = currentPatient.getOrders();
     for (posO = 0; posO < orders.length; posO++) {
