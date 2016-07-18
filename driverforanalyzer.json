@@ -3,7 +3,7 @@
         "index": null,
         "nameDriverAnalyzer": "DriverForTesting",
         "descriptionAnalyzer": "Interfaz para realizar pruebas",
-        "nameFileJS": "driverfortesting.js",
+        "nameFileJS": "src/driverfortesting.js",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 },
         "specialCharacters":  [
@@ -63,7 +63,7 @@
         "index": null,
         "nameDriverAnalyzer": "DriverForTesting2",
         "descriptionAnalyzer": "Interfaz para realizar pruebas 2",
-        "nameFileJS": "driverfortesting2.js",
+        "nameFileJS": "src/driverfortesting2.js",
         "pathSerialPort": null,
         "connectionOptions": { "bitrate": 57600 },
         "specialCharacters":  [                                 {
