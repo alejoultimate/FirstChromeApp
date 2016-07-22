@@ -16,13 +16,13 @@
       "scripts": ["background.js"]
     }
   },
-  
   "permissions": [
                     "serial", 
                     { "fileSystem": ["write", "retainEntries", "directory"] },
                     "storage",
                     "unlimitedStorage",
                     "syncFileSystem",
-                    "downloads"
+                    "downloads",
+                    "http://epsarpdllo01.suranet.com/MensajeriaDinamica/rest/datosLab/pruebaTrama"
                  ]
 }

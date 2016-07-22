@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myApp">
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="dist/switchery.min.css" />
+  <link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css">
   <script src="dist/switchery.min.js"></script>
-  <script src="lib/jquery-3.1.0.min.js"></script>
   <script src="lib/angular.min.js"></script>
+  <script src="lib/angular-route.min.js"></script>
   <script src="lib/angular-resource.min.js"></script>
   <script src="src/services.js"></script>
   <script src="src/controllers.js"></script>
@@ -14,7 +15,6 @@
   <script src="lib/filemanager.js"></script>
   <script src="lib/protocolastm.js"></script>
   <script src="lib/driverforanalyzer.js"></script>
-  
   <title>SIRIUS.SerialPortToASTM()</title>
 </head>
 
@@ -22,7 +22,6 @@
   
   <h1 id="saludo"></h1>
     
-
   <article id="puertos" class="puertos">
   </article>
 
@@ -31,8 +30,22 @@
         <div class="log"></div>
   </div>
   
+    <div class="container">
+      <p>Input something in the input box:</p>
+      <p>Name : <input type="text" ng-model="name" placeholder="Enter name here"></p>
+      <h1>Hello {{name}}</h1>
+      <div ng-controller="MainController">
+        <div id="datetime">
+          {{ date.raw | date:'hh mm ss' }}
+        </div>
+      </div>
+    </div>
+  
+  <script src="lib/jquery-2.2.4.min.js"></script>
+  <script src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="driverforanalyzer.json"></script>
   <script src="src/main.js"></script>
+  
   
 
 </body>
