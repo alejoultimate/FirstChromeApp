@@ -1,14 +1,16 @@
-angular.module('myApp', [])
+var app = angular.module('myApp', []);
 
-.controller('MainController', function($scope, $timeout) {
-    // Build the date object
-    $scope.date = {};
-    // Update function
-    var updateTime = function() {
-      $scope.date.raw = new Date();
-      $timeout(updateTime, 1000);
-    };
-    // Kick off the update function
-    updateTime();
+app.config(['$locationProvider', function($locationProvider) {
+  $locationProvider.html5Mode( true );
+}]);
+
+app.factory('Page', function(){
+  var title = 'SIRIUS.SerialPortToASTM()';
+  return {
+    title: function() { return title; },
+  };
 });
 
+app.controller('mainCtrl', function($scope, Page) {
+  $scope.Page = Page;
+});

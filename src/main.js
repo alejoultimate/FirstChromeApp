@@ -257,31 +257,5 @@
     generateViewSerialPort();
   };
 
-/////////////////////////////////////////////////////////////////////////
-/// mi código de prueba
-/////////////////////////////////////////////////////////////////////////
-
-  function nombreModuloApp() {
-    document.querySelector('#saludo').innerText = 'SIRIUS.SerialPortToASTM()';
-  }
-  
-
-  /* Permite cargar múltiples funciones de JavaScript en el evento onload */
-  function addLoadEvent(func) {
-    var oldonload = window.onload;
-    if (typeof window.onload != 'function') {
-      window.onload = func;
-    } else {
-      window.onload = function() {
-        if (oldonload) {
-          oldonload();
-          func();
-        }
-      };
-    }
-  }
-  
-  addLoadEvent(nombreModuloApp);
-
   init();
 })();
