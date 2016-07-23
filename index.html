@@ -5,19 +5,10 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="dist/switchery.min.css" />
   <link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css">
-  <title>{{ Page.title() }}</title>
+  <title ng-bind="Page.getTitle()"></title>
 </head>
 
 <body>
-  
-  <h1 id="saludo">{{ Page.title() }}</h1>
-    
-  <article id="puertos" class="puertos">
-  </article>
-
-  <div class="commands" id="misOperaciones">
-        <div class="log"></div>
-  </div>
 
   <script src="lib/jquery-2.2.4.min.js"></script>
   <script src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
@@ -27,6 +18,16 @@
   <script src="src/services.js"></script>
   <script src="src/controllers.js"></script>
   <script src="dist/switchery.min.js"></script>
+
+  <h1 id="saludo" ng-bind="Page.getTitle()"></h1>
+    
+  <article id="puertos" class="puertos">
+  </article>
+
+  <div class="commands" id="misOperaciones">
+        <div class="log"></div>
+  </div>
+
   <script src="lib/serial.js"></script>
   <script src="lib/filemanager.js"></script>
   <script src="lib/protocolastm.js"></script>

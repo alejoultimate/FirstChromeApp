@@ -180,7 +180,6 @@
 
   var logError = function(index, msg) {
     statusLine[index].className = "error";
-    statusLine[index].textContent = msg;
     log("<span style='color: red;'>" + msg + "</span>");
   };
 
@@ -195,7 +194,6 @@
     arrayConexionPuertos[index].onClose.addListener(onClose);
     log("Id. conexion ABIERTO " + connectionId);
     logSuccess("Device opened.");
-//    enableOpenButton(false);
     statusLine[index].textContent = "Connected";
   };
 

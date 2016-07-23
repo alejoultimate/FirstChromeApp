@@ -7,7 +7,7 @@ app.config(['$locationProvider', function($locationProvider) {
 app.factory('Page', function(){
   var title = 'SIRIUS.SerialPortToASTM()';
   return {
-    title: function() { return title; },
+    getTitle: function() { return title; },
   };
 });
 
