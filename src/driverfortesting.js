@@ -8,6 +8,8 @@ DriverForTesting.prototype = new DriverForAnalyzer(null);
 
 // Aqui se define cuando se debe convertir los datos a un Header ASTM
 DriverForTesting.prototype.whenIsHeader = function (data) {
+  // < Se debe heredar este metodo y retornar true, para covertir la data
+  // en un mensaje ASTM, cuando se cumpla una condición >
   return (data.indexOf("Header") != -1);
 };
 
@@ -22,7 +24,7 @@ DriverForTesting.prototype.convertDataToHeaderASTM = function (data) {
   var cleanData = this.cleanSpecialCharacters(data);
   // Se modifica la ID del remitente del Header
   header.setSenderID(cleanData);
-  // Se obtiene la Data del Header modificada y se adiciona un caracter line feed (fin de linea)
+  // Se obtiene la trama ASTM modificada y se adiciona un caracter line feed (fin de linea)
   // para que detecte el fin de la trama configurada en el archivo driverforanalyzer.json
   dataModified = header.getDataModified() + String.fromCharCode(10);
   
@@ -48,7 +50,7 @@ DriverForTesting.prototype.convertDataToPatientASTM = function (data) {
   var cleanData = this.cleanSpecialCharacters(data);
   // Se modifica la ID de la muestra
   patient.setSampleID(cleanData);
-  // Se obtiene la Data del Patient modificada y se adiciona un caracter line feed (fin de linea)
+  // Se obtiene la trama ASTM modificada y se adiciona un caracter line feed (fin de linea)
   // para que detecte el fin de la trama configurada en el archivo driverforanalyzer.json
   dataModified = patient.getDataModified() + String.fromCharCode(10);
   
@@ -71,13 +73,35 @@ DriverForTesting.prototype.convertDataToOrderASTM = function (data) {
   var cleanData = this.cleanSpecialCharacters(data);
   // Establecer la ID de la muestra
   order.setSampleID(cleanData);
-  // Se obtiene la Data del Patient modificada y se adiciona un caracter line feed (fin de linea)
+  // Se obtiene la trama ASTM modificada y se adiciona un caracter line feed (fin de linea)
   // para que detecte el fin de la trama configurada en el archivo driverforanalyzer.json
   dataModified = order.getDataModified() + String.fromCharCode(10);
   
   // Retornar la Data
   return dataModified;
 };
+
+DriverForTesting.prototype.whenIsFinalRecord = function (data) {
+  // < Se debe heredar este metodo y retornar true, para covertir la data
+  // en un mensaje ASTM, cuando se cumpla una condición >
+  return (data.indexOf("FinalRecord") != -1);
+};
+
+DriverForTesting.prototype.convertDataToFinalRecord = function (data) {
+  // Definir variables locales
+  var finalRecord = new FinalRecord();
+  var dataModified = "";
+  
+  // Se limpian los caracteres especiales de la Data
+  var cleanData = this.cleanSpecialCharacters(data);
+  // Se obtiene la trama ASTM modificada y se adiciona un caracter line feed (fin de linea)
+  // para que detecte el fin de la trama configurada en el archivo driverforanalyzer.json
+  dataModified = finalRecord.getDataModified() + String.fromCharCode(10);
+  
+  // Retornar la Data
+  return dataModified;
+};
+
 
 // Implementar driverResponse
 DriverForTesting.prototype.driverResponse = function () {
@@ -87,9 +111,9 @@ DriverForTesting.prototype.driverResponse = function () {
   console.log(this.getProtocolASTM());
   
   this.saveProtocolAsText();
-  
-  angular.injector(['ng', 'myApp.servicioDatos']).get('ServicioResultados').enviarResultado({ trama: 'kdgfhasgdf', sistema: 'un sistema'});
-  
+
+  this.sendResult();
+
   // Respuesta automática
   return "Respuesta automatica : " + this.getStringReceived();
 };
