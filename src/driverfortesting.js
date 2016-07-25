@@ -89,7 +89,7 @@ DriverForTesting.prototype.whenIsFinalRecord = function (data) {
 
 DriverForTesting.prototype.convertDataToFinalRecord = function (data) {
   // Definir variables locales
-  var finalRecord = new FinalRecord();
+  var finalRecord = new FinalRecordASTM();
   var dataModified = "";
   
   // Se limpian los caracteres especiales de la Data
