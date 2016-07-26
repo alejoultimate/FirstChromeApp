@@ -81,13 +81,39 @@ DriverForTesting.prototype.convertDataToOrderASTM = function (data) {
   return dataModified;
 };
 
+DriverForTesting.prototype.whenIsResult = function (data) {
+  // < Se debe heredar este metodo y retornar true, para covertir la data
+  // en un mensaje ASTM, cuando se cumpla una condición >
+  return (data.indexOf("Result") != -1);
+};
+
+DriverForTesting.prototype.convertDataToResultASTM = function (data) {
+  // Definir variables locales
+  var result = new ResultASTM();
+  var dataModified = "";
+  
+  // Se limpian los caracteres especiales de la Data
+  var cleanData = this.cleanSpecialCharacters(data);
+  // Establecer la ID de la muestra
+  result.setTestID(cleanData.substr(0, cleanData.indexOf("Result") + "Result".length ));
+  // Establecer el valor del resultado de la muestra
+  result.setResults(cleanData.substr(cleanData.indexOf("Result") + "Result".length + 1));
+  
+  // Se obtiene la trama ASTM modificada y se adiciona un caracter line feed (fin de linea)
+  // para que detecte el fin de la trama configurada en el archivo driverforanalyzer.json
+  dataModified = result.getDataModified() + String.fromCharCode(10);
+  
+  // Retornar la Data
+  return dataModified;
+};
+
 DriverForTesting.prototype.whenIsFinalRecord = function (data) {
   // < Se debe heredar este metodo y retornar true, para covertir la data
   // en un mensaje ASTM, cuando se cumpla una condición >
   return (data.indexOf("FinalRecord") != -1);
 };
 
-DriverForTesting.prototype.convertDataToFinalRecord = function (data) {
+DriverForTesting.prototype.convertDataToFinalRecordASTM = function (data) {
   // Definir variables locales
   var finalRecord = new FinalRecordASTM();
   var dataModified = "";

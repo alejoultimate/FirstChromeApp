@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "SIRIUS.SerialPortToASTM()",
-  "short_name": "SIRIUS.SerialPortToASTM()",
+  "name": "Instrument-Link()",
+  "short_name": "Instrument-Link()",
   "description": "",
   "version": "0.0.1",
   "minimum_chrome_version": "38",

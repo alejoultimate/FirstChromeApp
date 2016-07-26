@@ -5,7 +5,8 @@ app.config(['$locationProvider', function($locationProvider) {
 }]);
 
 app.factory('Page', function(){
-  var title = 'SIRIUS.SerialPortToASTM()';
+  // Definir el título de la pagina con el nombre de la aplicación
+  var title = chrome.runtime.getManifest().name;
   return {
     getTitle: function() { return title; },
   };

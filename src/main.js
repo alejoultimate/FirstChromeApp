@@ -62,6 +62,7 @@
   var generateViewSerialPort = function () {
       //Create a HTML Table element.
       var table = document.createElement("TABLE");
+      table.setAttribute("class", "table");
       table.id = "tblPuertos";
       table.border = "1";
       // Obtener el listado de todos los dispositivos
@@ -192,7 +193,7 @@
     arrayConexionPuertos[index].onReceive.addListener(onReceive);
     arrayConexionPuertos[index].onError.addListener(onError);
     arrayConexionPuertos[index].onClose.addListener(onClose);
-    log("Id. conexion ABIERTO " + connectionId);
+    //log("Id. conexion ABIERTO " + connectionId);
     logSuccess("Device opened.");
     statusLine[index].textContent = "Connected";
   };
