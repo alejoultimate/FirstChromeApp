@@ -176,6 +176,7 @@
 
   var logError = function(index, msg) {
     statusLine[index].className = "error";
+    console.error(msg);
     log(msg);
   };
 
