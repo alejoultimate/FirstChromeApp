@@ -107,6 +107,28 @@ DriverForTesting.prototype.convertDataToResultASTM = function (data) {
   return dataModified;
 };
 
+DriverForTesting.prototype.whenIsQuery = function (data) {
+  // < Se debe heredar este metodo y retornar true, para covertir la data
+  // en un mensaje ASTM, cuando se cumpla una condición >
+  return (data.indexOf("Query") != -1);
+};
+
+DriverForTesting.prototype.convertDataToQueryASTM = function (data) {
+  // Definir variables locales
+  var query = new QueryASTM();
+  var dataModified = "";
+  
+  // Se limpian los caracteres especiales de la Data
+  var cleanData = this.cleanSpecialCharacters(data);
+  
+  // Se obtiene la trama ASTM modificada y se adiciona un caracter line feed (fin de linea)
+  // para que detecte el fin de la trama configurada en el archivo driverforanalyzer.json
+  dataModified = query.getDataModified() + String.fromCharCode(10);
+  
+  // Retornar la Data
+  return dataModified;
+};
+
 DriverForTesting.prototype.whenIsFinalRecord = function (data) {
   // < Se debe heredar este metodo y retornar true, para covertir la data
   // en un mensaje ASTM, cuando se cumpla una condición >
@@ -137,6 +159,8 @@ DriverForTesting.prototype.driverResponse = function () {
   console.log(this.getProtocolASTM());
   
   this.saveProtocolAsText();
+  
+  this.saveProtocolAsLocalFile();
 
   this.sendResult();
 
