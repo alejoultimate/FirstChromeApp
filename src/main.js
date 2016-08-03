@@ -8,6 +8,7 @@
   var arrayDriverAnalyzer = [];
   
   var init = function() {
+    Logger.show();
     if (!serial_lib)
       throw "You must include serial.js before";
     configurationOfAnalyzer.loadConfiguration(onLoadAnalyzerJSON);
@@ -150,7 +151,7 @@
           }
         }
         catch(err) {
-          logError(indexPuertoActual, "Ocurrió el siguiente error: " + err.message);
+          logError(indexPuertoActual, "Ocurrió el siguiente error al abrir el dispositivo: " + err.message);
         }
     }
     e.stopPropagation();
@@ -169,24 +170,18 @@
       }
   };
 
-  
-  var log = function(msg) {
-    console.log(msg);
-    logArea.innerHTML = msg + "<br/>" + logArea.innerHTML;
-  };
-  
   var logSuccess = function(msg) {
-      log("<span style='color: green;'>" + msg + "</span>");
+      log(msg);
   };
 
   var logError = function(index, msg) {
     statusLine[index].className = "error";
-    log("<span style='color: red;'>" + msg + "</span>");
+    log(msg);
   };
 
   var onOpen = function(newConnection, connectionId, index) {
     if (newConnection === null) {
-      logError(index, "Failed to open device.");
+      logError(index, "No se pudo abrir el dispositivo.");
       return;
     }
     arrayConexionPuertos[index] = newConnection;
@@ -194,7 +189,7 @@
     arrayConexionPuertos[index].onError.addListener(onError);
     arrayConexionPuertos[index].onClose.addListener(onClose);
     //log("Id. conexion ABIERTO " + connectionId);
-    logSuccess("Device opened.");
+    logSuccess("Dispositivo abierto.");
     statusLine[index].textContent = "Connected";
   };
 
@@ -236,6 +231,7 @@
     limpiarArraySinValoresNulos(arrayConexionPuertos);
     statusLine[index].textContent = "No connected";
     statusLine[index].className = "";
+    logSuccess("Dispositivo cerrado.");
   };
   
   function limpiarArraySinValoresNulos(array) {
