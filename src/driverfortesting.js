@@ -163,6 +163,8 @@ DriverForTesting.prototype.driverResponse = function () {
   this.saveProtocolAsLocalFile();
 
   this.sendResult();
+  
+  dbInstrument.Add();
 
   // Respuesta automática
   return "Respuesta automatica : " + this.getStringReceived();

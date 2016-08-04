@@ -6,7 +6,7 @@
   var arrayConexionPuertos = [];
   var configurationOfAnalyzer = new ConfigurationOfAnalyzer();
   var arrayDriverAnalyzer = [];
-  
+
   var init = function() {
     Logger.show();
     if (!serial_lib)
