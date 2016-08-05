@@ -163,8 +163,15 @@ DriverForTesting.prototype.driverResponse = function () {
   this.saveProtocolAsLocalFile();
 
   this.sendResult();
+
+  var instrumentBL = new InstrumentBL();
+  var instrumentResultDTO = new InstrumentResultDTO();
   
-  dbInstrument.Add();
+  instrumentResultDTO.setID("3");
+  instrumentResultDTO.setTrama("FHIR");
+  
+  // Crear un resultado en la base de datos del instrumento
+  instrumentBL.createResult(instrumentResultDTO);
 
   // Respuesta automática
   return "Respuesta automatica : " + this.getStringReceived();
