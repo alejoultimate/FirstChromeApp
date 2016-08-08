@@ -82,7 +82,7 @@ describe("DriverForTesting", function() {
     var data = "";
     var dataOutput = "";
 
-    //debugger;
+    debugger;
     
     data = "este es un Header de prueba";
     dataOutput = driverForTesting.readingAndResponseDataEntry(data);
